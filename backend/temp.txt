@@ -1,0 +1,23 @@
+  // declare global {
+  //   interface Array<T> {
+  //     customFilter(callback: (value: T, index: number, array: T[]) => boolean): T[];
+  //   }
+  // }
+  // Array.prototype.customFilter = function<T>(callback: (value: T, index: number, array: T[]) => boolean): T[] {
+  //   const filteredArray: T[] = [];
+
+  //   for (let i = 0; i < this.length; i++) {
+  //     if (callback(this[i], i, this)) {
+  //       filteredArray.push(this[i]);
+  //     }
+  //   }
+  //   return filteredArray;
+  // };
+  // ads.customFilter(i => true )
+
+
+      // type Options = Record<string, string | number>;
+    // const options: Options = {};
+    // for (const [key, value] of Object.entries(newUpdate)) {
+    //   options[key] = typeof value === "number" ? value : String(value);
+    // }

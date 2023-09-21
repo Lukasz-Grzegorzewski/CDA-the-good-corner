@@ -1,0 +1,16 @@
+GET http://localhost:3000
+
+###
+
+GET http://localhost:3000/ads
+
+###
+
+POST http://localhost:3000/ads
+content-type: application/json
+
+{
+  "id": 3
+}
+
+###
