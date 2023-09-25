@@ -23,11 +23,19 @@ GROUP BY location;
 SELECT * FROM Category;
 
 -- /Ad - Categories/
-SELECT a.*, c.name AS category FROM Ad a
-LEFT JOIN Category c ON c.id = a.category_id
-WHERE a.owner = "Sam";
-
 SELECT c.name AS category, a.* FROM Ad a
-LEFT JOIN Category c ON c.id = a.category_id
+LEFT JOIN Category c ON c.id = a.categoryId
 WHERE c.id = 1;
 
+
+SELECT "category"."name" AS category, ad.* 
+FROM "ad" "ad" 
+LEFT JOIN "category" "category" 
+ON "ad"."categoryId" = "category"."id" 
+WHERE "ad"."categoryId" = 2;
+
+SELECT "ad"."id" AS "ad_id", "ad"."title" AS "ad_title", "ad"."description" AS "ad_description", "ad"."owner" AS
+"ad_owner", "ad"."price" AS "ad_price", "ad"."picture" AS "ad_picture", "ad"."location" AS "ad_location",
+"ad"."createdAt" AS "ad_createdAt", "ad"."categoryId" AS "ad_categoryId", "category"."id" AS "category_id",
+"category"."name" AS "category_name" FROM "ad" "ad" LEFT JOIN "category" "category" ON "ad"."categoryId" =
+"category"."id" WHERE "ad"."categoryId" = 3;

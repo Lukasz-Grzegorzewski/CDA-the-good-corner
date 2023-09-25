@@ -37,9 +37,9 @@ const arr = [
 //   }
 // });
 
-function sort(arr){
-  const tempArr = [...arr]
-  return
-}
+// function sort(arr){
+//   const tempArr = [...arr]
+//   return
+// }
 
-console.log(arr);
+// console.log(arr);
