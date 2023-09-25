@@ -1,5 +1,3 @@
---                                                /CREATE/
-
 -- /Ad/
 CREATE  TABLE Ad (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,7 +11,6 @@ CREATE  TABLE Ad (
   category_id INTEGER,
   FOREIGN KEY (category_id) REFERENCES Category(id)
 );
-
 -- /Categories/
 CREATE  TABLE Category (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,10 +18,9 @@ CREATE  TABLE Category (
 );
 
 --                                                /POPULATION/
-
 -- /Ad/
 PRAGMA foreign_keys = ON;
-INSERT INTO Ad (title, description, owner, price, picture, location, createdAt, category_id) 
+INSERT INTO Ad (title, description, owner, price, picture, location, createdAt, categoryId) 
 VALUES 
 ("Super bike",    "Great state",  "Lukasz", 10,     "picture1",   "Paris",    "2013-10-07 08:23:19.120Z", 2),
 ("Car",           "2010",         "Claire", 2000,   "picture2",   "Paris",    "2013-10-07 08:23:19.120Z", 1),
@@ -56,6 +52,20 @@ VALUES ("Cars"),
 ("Bikes"),
 ("Technologies"),
 ("Furnitures");
+
+SELECT * FROM Category;
+
+-- /Tags/
+PRAGMA foreign_keys = ON;
+INSERT INTO Tag (name) 
+VALUES ("Tag1"),
+("Tag2"),
+("Tag3"),
+("Tag4");
+
+SELECT * FROM Tag;
+
+
 
 
 --

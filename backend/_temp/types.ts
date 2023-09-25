@@ -1,4 +1,4 @@
-export type Ad = {
+export type AdType = {
   [key: string]: string | number | undefined;
   id: number;
   title: string;
@@ -7,13 +7,13 @@ export type Ad = {
   price?: number;
   picture?: string;
   location?: string;
-  createdAt: string;
+  category?: number;
+  createdAt?: string;
 };
 
-export type Category = {
+export type CategoryType = {
   [key: string]: string | number | undefined;
   id: number;
   name: string;
 };
 
-export type AdsWithCategoryName = Ad & { categoryName: string };
