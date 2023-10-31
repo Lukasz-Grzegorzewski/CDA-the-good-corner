@@ -1,0 +1,36 @@
+
+
+GET http://localhost:5001/ads
+
+###
+
+GET http://localhost:5001/ads/1
+###
+
+GET http://localhost:5001/ads?filter[description]=Good&filter[price_start]=240&filter[price_end]=500&filter[date_start]=2020-01-01&filter[date_end]=2023-12-31&sort[price, title]=[ASC, ASC]&filter[title]=P&page=1&limit=2
+
+###
+
+POST http://localhost:5001/ads
+content-type: application/json
+
+{
+  "title": "Test Title",
+  "description": "Test Description",
+  "price": 100
+}
+
+###
+
+PATCH http://localhost:5001/ads/1
+content-type: application/json
+
+{
+  "title": "Update Title",
+  "description": "Test Description",
+  "price": 100
+}
+
+###
+
+DELETE http://localhost:5001/ads/1

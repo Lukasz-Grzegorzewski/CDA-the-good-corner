@@ -1,0 +1,119 @@
+.form-section {
+  display: flex;
+  margin-top: 20px;
+
+  /* min-height: 550px; */
+
+  background: rgb(250, 250, 250);
+  box-shadow: 0px 0px 10px rgba(31, 38, 135, 0.17);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  /* overflow: hidden; */
+  transition: all 200ms ease-in-out;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 50px;
+  transition: all 200ms ease-in-out;
+}
+
+.form label {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  height: 40px;
+}
+
+.form label input,
+.form label textarea,
+.form label select {
+  min-width: 300px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.form label input.gray,
+.form label textarea.gray {
+  color: #ccc;
+}
+
+/* .form.form-update-ad label input::placeholder,
+.form.form-update-ad label textarea::placeholder{
+  color: #000000;
+} */
+
+.disabled-button {
+  color: rgb(180, 180, 180);
+  border-color: rgb(180, 180, 180);
+  cursor: default;
+  pointer-events: none;
+}
+
+.img {
+  align-self: center;
+  max-width: 275px;
+  margin-right: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 830px) {
+  .form-section {
+    flex-direction: column-reverse;
+  }
+
+  .img {
+    align-self: center;
+    max-height: 200px;
+    max-width: 100%;
+    height: 200px;
+    margin-right: 0;
+    margin-top: 20px;
+  }
+}
+
+
+@media screen and (max-width: 530px) {
+  .form-section {
+    flex-direction: column-reverse;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .form label input,
+  .form label textarea,
+  .form label select {
+    min-width: 200px;
+    font-size: .8rem;
+    letter-spacing: 1px;
+    padding: 5px 6px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+  }
+
+  .img {
+    align-self: center;
+    max-height: 150px;
+    max-width: 100%;
+    height: 200px;
+    margin-right: 0;
+    margin-top: 20px;
+  }
+}

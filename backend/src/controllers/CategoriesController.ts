@@ -1,10 +1,19 @@
 import { Request, Response } from "express";
 import { Controller } from ".";
 import { Category } from "../entities/Category";
+import { dataSource } from "../datasource";
+import { Ad } from "../entities/Ad";
 
 export class CategoriesController extends Controller {
   getAll = async (req: Request, res: Response) => {
-    const categories = await Category.find();
+    
+    const categories = await dataSource
+    .getRepository(Category)
+    .createQueryBuilder("category")
+    .leftJoinAndSelect('category.ads', 'ad')
+    .select(['category.*', 'COUNT(ad.id) AS adsCount'])
+    .groupBy('category.id')
+    .getRawMany();
 
     if (categories.length > 0) return res.status(200).json(categories);
     else res.sendStatus(404);
@@ -72,7 +81,7 @@ export class CategoriesController extends Controller {
     if (category) {
       const removedCategory = await category.remove();
 
-      if (removedCategory) res.sendStatus(204);
+      if (removedCategory) res.status(200).json({id});
       else res.sendStatus(500);
     } else {
       res.sendStatus(404);

@@ -1,0 +1,8 @@
+.ads-admin {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-height: 99%;
+  overflow-y: auto;
+} 

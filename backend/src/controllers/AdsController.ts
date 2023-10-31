@@ -14,17 +14,23 @@ export class AdsController extends Controller {
   prop = title || description || price_start || price_end || date_start || date_end ||
   filter[prop]*/
   getAll = async (req: Request, res: Response) => {
-    const { filter, sort, page, limit } = req.query;
-
-    type Filter = { [key: string]: string };
+    const { filter, sort, page, limit, categoryId } = req.query;
+    console.log(`page : `, page);
+    console.log(`limit : `, limit);
+    
 
     const options = { relations: { category: true, tags: true } };
     const where = {};
     const order = {};
 
+    //ADS BY CATEGORY
+    if(categoryId){
+      Object.assign(where, {category : {id : categoryId}})
+    }
+
     //-----FILTER
     if (filter) {
-      const filterObj = filter as Filter;
+      const filterObj = filter as { [key: string]: string };
       const alowedParameters: string[] = [
         "title",
         "description",
@@ -102,10 +108,13 @@ export class AdsController extends Controller {
     }
 
     //FINAL OPTIONS MERGE
-    Object.assign(options, { where }, { order });
+    Object.assign(options, { where }, { order } );
+    console.log(options);
+    
+    const count = await Ad.count();
     const resultAds = await Ad.find(options);
 
-    if (resultAds.length > 0) res.status(200).send(resultAds);
+    if (count > 0) res.status(200).json({resultAds, count});
     else res.sendStatus(404);
   };
 
@@ -139,7 +148,7 @@ export class AdsController extends Controller {
     const inputs = req.body;
     const ad = await new Ad();
     if (ad) {
-      Object.assign(ad, inputs);
+      Object.assign(ad, inputs, {createdAt : new Date()});
     }
     const { id } = await ad.save();
     if (id) return res.status(200).json({ succes: true, id });
@@ -153,6 +162,8 @@ export class AdsController extends Controller {
     const ad = await Ad.findOneBy({ id });
 
     if (ad) {
+      console.log(inputs);
+      
       Object.assign(ad, inputs, { id: ad.id });
       const status = await ad.save();
 
@@ -194,7 +205,9 @@ export class AdsController extends Controller {
 
     if (ad) {
       const removedAd = await ad.remove();
-      if (removedAd) res.sendStatus(204);
+      console.log(removedAd);
+      
+      if (removedAd) res.status(200).json({id});
       else res.sendStatus(500);
     } else return res.sendStatus(404);
   };

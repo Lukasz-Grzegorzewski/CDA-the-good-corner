@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import express, { NextFunction, Request, Response } from "express";
+import cors from "cors"
+
 import { dataSource } from "./datasource";
 
 import { CategoriesController } from "./controllers/CategoriesController";
@@ -8,7 +10,8 @@ import { TagsController } from "./controllers/TagsController";
 
 const app = express();
 app.use(express.json());
-const port: number = 3000;
+app.use(cors());
+const port: number = 5001;
 
 //TEST
 app.get("/test1", async (req: Request, res: Response) => {
@@ -54,6 +57,10 @@ app.post("/tags", asyncController(tagsController.createOne));
 app.patch("/tags/:id", asyncController(tagsController.patchOne));
 app.put("/tags/:id", asyncController(tagsController.updateOne));
 app.delete("/tags/:id", asyncController(tagsController.deleteOne));
+
+app.delete("*", (req: Request, res: Response)=> {
+  res.status(404).json({message: "Not Found"})
+});
 
 app.listen(port, async () => {
   await dataSource.initialize();

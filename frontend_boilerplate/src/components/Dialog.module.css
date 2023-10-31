@@ -1,0 +1,33 @@
+.dialog:active {
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons-container button{
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.buttons-container button:last-child {
+  color: white;
+  background-color: #ffa41b;
+}

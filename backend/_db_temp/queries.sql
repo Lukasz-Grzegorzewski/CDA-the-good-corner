@@ -24,8 +24,7 @@ SELECT * FROM Category;
 
 -- /Ad - Categories/
 SELECT c.name AS category, a.* FROM Ad a
-LEFT JOIN Category c ON c.id = a.categoryId
-WHERE c.id = 1;
+LEFT JOIN Category c ON c.id = a.categoryId;
 
 
 SELECT "category"."name" AS category, ad.* 
@@ -39,3 +38,4 @@ SELECT "ad"."id" AS "ad_id", "ad"."title" AS "ad_title", "ad"."description" AS "
 "ad"."createdAt" AS "ad_createdAt", "ad"."categoryId" AS "ad_categoryId", "category"."id" AS "category_id",
 "category"."name" AS "category_name" FROM "ad" "ad" LEFT JOIN "category" "category" ON "ad"."categoryId" =
 "category"."id" WHERE "ad"."categoryId" = 3;
+

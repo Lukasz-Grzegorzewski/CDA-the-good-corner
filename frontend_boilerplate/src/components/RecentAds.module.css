@@ -1,0 +1,58 @@
+.recent-ads {
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.title {
+  margin-top: 60px;
+}
+
+.card {
+  position: relative;
+}
+
+.bar-filter {
+  position: fixed;
+  z-index: 2;
+
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+
+  background-color: rgba(224, 224, 224, .9);
+
+  right: 0;
+  left: 0;
+  padding: 10px;
+}
+
+.pages-links-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.link-page{
+  box-shadow: 0 0 3px black;
+  padding: 8px;
+  background-color: rgb(236, 236, 236);
+}
+
+a.link-page-active {
+  color: white;
+  background-color: #ffa41b;
+}
+
+.arrow {
+  margin: auto;
+  height: 20px;
+  padding: 0;
+}
+
+.filtres-btn {
+
+}
+
