@@ -1,90 +1,29 @@
 import "reflect-metadata";
 import { dataSource } from "./datasource";
+import { buildSchema } from "type-graphql";
+import { TagsResolver } from "./resolvers/Tags";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import {
-  Arg,
-  Field,
-  InputType,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-  buildSchema,
-} from "type-graphql";
-
-// ObjectType
-@ObjectType()
-class Book {
-  @Field()
-  id!: string;
-
-  @Field()
-  title!: string;
-
-  @Field()
-  author!: string;
-}
-
-// DATA
-const books: Book[] = [
-  {
-    id: "0",
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    id: "1",
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
-
-// InputType
-@InputType()
-class BookInput {
-  @Field()
-  title!: string;
-
-  @Field()
-  author!: string;
-}
-
-// Resolver
-@Resolver(Book)
-class BookResolver {
-  @Query(() => [Book])
-  books() {
-    return books;
-  }
-
-  @Query(() => Book)
-  getBookById(@Arg("id") id: string) {
-    return books.find((book) => book.id == id);
-  }
-
-  @Mutation(() => Book)
-  addBook(@Arg("data") { title, author }: BookInput) {
-    const lastId = parseInt(books.at(-1)!.id, 10);
-    const id = (lastId + 1).toString();
-    books.push({ title, author, id });
-    return books.at(-1);
-  }
-}
+import { AdsResolver } from "./resolvers/Ads";
+import { CategoriesResolver } from "./resolvers/Categories";
 
 async function start() {
-  //Build Schema from resolvers
   const schema = await buildSchema({
-    resolvers: [BookResolver],
+    resolvers: [AdsResolver, TagsResolver, CategoriesResolver],
   });
 
-  const server = new ApolloServer({ schema });
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
+  const server = new ApolloServer({
+    schema,
   });
-  console.log(`🚀  Server ready at: ${url}`);
+
+  await dataSource.initialize();
+  await startStandaloneServer(server, {
+    listen: {
+      port: 4000,
+    },
+  });
+
+  console.log("🚀 Server started!");
 }
 
-// Start server
 start();
-

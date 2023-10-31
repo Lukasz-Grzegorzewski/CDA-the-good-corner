@@ -39,3 +39,6 @@ SELECT "ad"."id" AS "ad_id", "ad"."title" AS "ad_title", "ad"."description" AS "
 "category"."name" AS "category_name" FROM "ad" "ad" LEFT JOIN "category" "category" ON "ad"."categoryId" =
 "category"."id" WHERE "ad"."categoryId" = 3;
 
+
+-- ALL TABLES
+.table

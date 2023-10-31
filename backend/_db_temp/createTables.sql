@@ -44,6 +44,7 @@ VALUES
 ("Closet",        "Good table",   "Sam",    0,     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo5V_xZeOTrd-tOQLTOdEJJw7cGvqgHeMC1A&usqp=CAU",  "Paris",    "2022-01-30 00:00:00.000Z", 4);
 
 SELECT * FROM Ad;
+PRAGMA table_info('Ad');
 
 -- /Categories/
 PRAGMA foreign_keys = ON;
@@ -58,6 +59,7 @@ VALUES ("Cars"),
 ("Other4");
 
 SELECT * FROM Category;
+PRAGMA table_info('Category');
 
 -- /Tags/
 PRAGMA foreign_keys = ON;
@@ -68,9 +70,32 @@ VALUES ("Tag1"),
 ("Tag4");
 
 SELECT * FROM Tag;
+PRAGMA table_info('tag');
 
+-- /ad_tags_tag/
+INSERT INTO Ad_tags_tag (adId, tagId)
+VALUES ("1", "1"),
+("2", "2"),
+("3", "3"),
+("4", "1"),
+("5", "1"),
+("6", "2"),
+("7", "3"),
+("8", "3"),
+("9", "1"),
+("10", "2"),
+("11", "3"),
+("12", "2"),
+("13", "1"),
+("14", "2"),
+("15", "3"),
+("16", "1"),
+("17", "1"),
+("18", "2"),
+("19", "3");
 
-
+SELECT * FROM Ad_tags_tag;
+PRAGMA table_info('ad_tags_tag');
 
 --
 --EMTY TABLES
