@@ -1,69 +1,90 @@
 import "reflect-metadata";
-import express, { NextFunction, Request, Response } from "express";
-import cors from "cors"
-
 import { dataSource } from "./datasource";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import {
+  Arg,
+  Field,
+  InputType,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+  buildSchema,
+} from "type-graphql";
 
-import { CategoriesController } from "./controllers/CategoriesController";
-import { AdsController } from "./controllers/AdsController";
-import { TagsController } from "./controllers/TagsController";
+// ObjectType
+@ObjectType()
+class Book {
+  @Field()
+  id!: string;
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-const port: number = 5001;
+  @Field()
+  title!: string;
 
-//TEST
-app.get("/test1", async (req: Request, res: Response) => {
-  res.status(200).json({ messagge: "test" });
-});
+  @Field()
+  author!: string;
+}
 
-/* ERROR HANDLING*/
-function asyncController(controller: any) {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await controller(req, res, next)
-    } catch (error) {
-      console.log(error);
-      res.sendStatus(500)
-    }
+// DATA
+const books: Book[] = [
+  {
+    id: "0",
+    title: "The Awakening",
+    author: "Kate Chopin",
+  },
+  {
+    id: "1",
+    title: "City of Glass",
+    author: "Paul Auster",
+  },
+];
+
+// InputType
+@InputType()
+class BookInput {
+  @Field()
+  title!: string;
+
+  @Field()
+  author!: string;
+}
+
+// Resolver
+@Resolver(Book)
+class BookResolver {
+  @Query(() => [Book])
+  books() {
+    return books;
+  }
+
+  @Query(() => Book)
+  getBookById(@Arg("id") id: string) {
+    return books.find((book) => book.id == id);
+  }
+
+  @Mutation(() => Book)
+  addBook(@Arg("data") { title, author }: BookInput) {
+    const lastId = parseInt(books.at(-1)!.id, 10);
+    const id = (lastId + 1).toString();
+    books.push({ title, author, id });
+    return books.at(-1);
   }
 }
 
-/* ADS */
-const adsController = new AdsController();
-app.get("/ads", asyncController(adsController.getAll));
-app.get("/ads/:id", asyncController(adsController.getOne));
-app.get("/categories/:id/ads", asyncController(adsController.getAdsByCategoryId));
-app.post("/ads", asyncController(adsController.createOne));
-app.patch("/ads/:id", asyncController(adsController.patchOne));
-app.put("/ads/:id", asyncController(adsController.updateOne));
-app.delete("/ads/:id", asyncController(adsController.deleteOne));
+async function start() {
+  //Build Schema from resolvers
+  const schema = await buildSchema({
+    resolvers: [BookResolver],
+  });
 
-/* CATEGORIES */
-const categoriesController = new CategoriesController();
-app.get("/categories", asyncController(categoriesController.getAll));
-app.get("/categories/:id", asyncController(categoriesController.getOne));
-app.post("/categories", asyncController(categoriesController.createOne));
-app.patch("/categories/:id", asyncController(categoriesController.patchOne));
-app.put("/categories/:id", asyncController(categoriesController.updateOne));
-app.delete("/categories/:id", asyncController(categoriesController.deleteOne));
+  const server = new ApolloServer({ schema });
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  });
+  console.log(`🚀  Server ready at: ${url}`);
+}
 
-/* TAGS */
-const tagsController = new TagsController();
-app.get("/tags", asyncController(tagsController.getAll));
-app.get("/tags/:id", asyncController(tagsController.getOne));
-app.post("/tags", asyncController(tagsController.createOne));
-app.patch("/tags/:id", asyncController(tagsController.patchOne));
-app.put("/tags/:id", asyncController(tagsController.updateOne));
-app.delete("/tags/:id", asyncController(tagsController.deleteOne));
+// Start server
+start();
 
-app.delete("*", (req: Request, res: Response)=> {
-  res.status(404).json({message: "Not Found"})
-});
-
-app.listen(port, async () => {
-  await dataSource.initialize();
-  console.warn("----------------------------------");
-  console.warn(`Server is listening on port: ${port}`);
-});
