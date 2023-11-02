@@ -59,7 +59,8 @@ export class TagsResolver {
   @Mutation(() => Tag)
   async updateTag(@Arg("id", () => Int) id: number, @Arg("data") data: TagUpdateInput): Promise<Tag | null> {
     const tag = await Tag.findOne({
-      where: { id }
+      where: { id },
+      relations: { ads: true }
     });
 
     if (tag) {

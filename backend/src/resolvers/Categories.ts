@@ -51,6 +51,7 @@ export class CategoriesResolver {
   ): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id },
+      relations: { ads: true }
     });
 
     if (category) {
