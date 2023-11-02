@@ -1,19 +1,22 @@
 export type AdType = {
-  id?: number;
+  id: number;
+  owner: string;
   title: string;
-  description: string;
-  owner?: string;
   price: number;
+  description?: string;
   imgUrl?: string;
   location?: string;
   createdAt?: Date;
-  category?: {
-    id: number;
-    name: string;
-  };
+  category?: CategoryType;
+  tags?: TagType[];
 };
 
 export type CategoryType = {
+  id: number;
+  name: string;
+};
+
+export type TagType = {
   id: number;
   name: string;
 };

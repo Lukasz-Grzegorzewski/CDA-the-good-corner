@@ -26,8 +26,6 @@ export function Layout(props: LayoutProps): React.ReactNode {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-
-
       <TotalPriceProvider value={{ totalPrice, setTotalPrice }}>
         <NotifPopupProvider value={{ notifPopup , setNotifPopup }}>
           <Header totalPrice={totalPrice} />

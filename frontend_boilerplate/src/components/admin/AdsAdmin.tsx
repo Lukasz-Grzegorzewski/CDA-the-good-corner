@@ -1,39 +1,29 @@
 import React from "react";
-import { AdminContentPropsType } from "./Admin";
-import { AdCard, AdCardProps } from "../AdCard";
+import { AdCard } from "../AdCard";
 import adsAdminStyles from "./AdsAdmin.module.css";
+import { AdType } from "@/types";
 
-export type AdsAdminPropsType = {
-  APIData: AdCardProps[];
-  isLoading: boolean;
-  isSucces: boolean;
-  error: any;
-  callCustomFetch: () => void;
-};
+type AdsAdminProps = {
+  ads: AdType[];
+}
 
-function AdsAdmin({
-  APIData,
-  isLoading,
-  isSucces,
-  error,
-  callCustomFetch,
-}: AdsAdminPropsType) {
+function AdsAdmin({ads}: AdsAdminProps)  {
   return (
     <div className={adsAdminStyles["ads-admin"]}>
-      {APIData.map((item: AdCardProps) => {
-        return <AdCard
-          key={item.id}
-          id={item.id}
-          title={item.title}
-          description={item.description}
-          owner={item.owner}
-          price={item.price}
-          imgUrl={item.imgUrl}
-          location={item.location}
-          createdAt={item.createdAt}
-          category={item.category}
-          callCustomFetch={callCustomFetch}
-        />;
+      {ads.map((item: AdType) => {
+        return (
+          <AdCard
+            key={item.id}
+            id={item.id}
+            title={item.title}
+            description={item.description}
+            owner={item.owner}
+            price={item.price}
+            imgUrl={item.imgUrl}
+            location={item.location}
+            category={item.category}
+          />
+        );
       })}
     </div>
   );

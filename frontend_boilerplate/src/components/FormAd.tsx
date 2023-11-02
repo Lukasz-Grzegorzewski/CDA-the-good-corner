@@ -1,58 +1,55 @@
 import formAdStyles from "./FormAd.module.css";
-
-import { useCustomFetch } from "@/axiosRequests/fetchData";
-
+import { useCreateCustom } from "@/gql_requests/createData";
+import { AdUpdateType, useUpdateCustom } from "@/gql_requests/updateData";
 import { AdType, CategoryType } from "@/types";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 
-type FormAdProps = {
-  id?: string | null;
-  title: string;
-  apiCall: Function;
-  isSucces: boolean;
-  ad?: AdType;
-  category?: number;
-  type: "new" | "update";
+const adToCreate = {
+  title: "Super car",
+  description: "2024",
+  owner: "Ado",
+  price: 11000,
+  imgUrl:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
+  location: "Lyon",
+  category: {
+    id: 1,
+    name: "Updated categrory",
+  },
+  tags: [
+    {
+      id: 3,
+      name: "Tag3",
+    },
+  ],
 };
 
-export default function FormAd({
-  apiCall,
-  title,
-  isSucces,
-  ad,
-  type,
-}: FormAdProps) {
-  const [fields, setFields] = useState({
-    title: ad?.title,
-    description: ad?.description,
-    owner: ad?.owner,
-    price: ad?.price,
-    imgUrl: ad?.imgUrl,
-    location: ad?.location,
-    category: ad?.category?.id,
+const categories = [
+  { id: 1, name: "Bikes" },
+  { id: 2, name: "Cars" },
+];
+
+type FormAdProps = {
+  ad?: AdType;
+  type: "new" | "update";
+  title: string;
+};
+
+export default function FormAd({ ad, type, title }: FormAdProps) {
+  const [data, setData] = useState<AdUpdateType>({
+    title: "",
+    description: "",
+    owner: "",
+    price: 0,
+    imgUrl: "",
+    location: "",
+    category: undefined,
+    tags: undefined,
   });
-
-  const {
-    APIData: categories,
-    isLoading: isLoadingCategories,
-    error: errorGetCategories,
-    isSucces: isSuccesGetCategories,
-  } = useCustomFetch("/categories");
-
-  useEffect(() => {
-    if (ad) {
-      setFields((prev) => ({
-        ...prev,
-        title: ad.title,
-        description: ad.description,
-        owner: ad?.owner,
-        price: ad.price,
-        imgUrl: ad?.imgUrl,
-        location: ad?.location,
-        category: ad?.category?.id,
-      }));
-    }
-  }, [ad, categories]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  setTimeout(() => {
+    setIsLoadingCategories(false);
+  }, 2000);
 
   function onSubmitHandler(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -60,11 +57,11 @@ export default function FormAd({
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries()) as unknown as AdType;
 
-    if (!data.price) {
-      data.price = 0;
+    if (ad) {
+      useUpdateCustom(data);
+    } else {
+      useCreateCustom(data);
     }
-
-    apiCall(data, form);
   }
 
   return type == "new" || (type == "update" && ad) ? (
@@ -76,12 +73,12 @@ export default function FormAd({
           <label htmlFor="title">
             <p className="obligatory-field">Title</p>
             <input
-              className={`${!fields?.title && formAdStyles.gray}`}
+              className={`${!data?.title && formAdStyles.gray}`}
               type="text"
               name="title"
               id="title"
-              value={fields.title || ""}
-              onChange={(e) => setFields({ ...fields, title: e.target.value })}
+              value={data.title || ""}
+              onChange={(e) => setData({ ...data, title: e.target.value })}
               placeholder={ad ? ad.description : "Enter title"}
             />
           </label>
@@ -90,12 +87,12 @@ export default function FormAd({
           <label htmlFor="description">
             <p>Description</p>
             <textarea
-              className={`${!fields?.description && formAdStyles.gray}`}
+              className={`${!data?.description && formAdStyles.gray}`}
               name="description"
               id="description"
-              value={fields.description || ""}
+              value={data.description || ""}
               onChange={(e) =>
-                setFields({ ...fields, description: e.target.value })
+                setData({ ...data, description: e.target.value })
               }
               placeholder={ad ? ad.description : "Enter description"}
             />
@@ -105,12 +102,12 @@ export default function FormAd({
           <label htmlFor="owner">
             <p className="obligatory-field">Owner</p>
             <input
-              className={`${!fields?.owner && formAdStyles.gray}`}
+              className={`${!data?.owner && formAdStyles.gray}`}
               type="text"
               name="owner"
               id="owner"
-              value={fields.owner || ""}
-              onChange={(e) => setFields({ ...fields, owner: e.target.value })}
+              value={data.owner || ""}
+              onChange={(e) => setData({ ...data, owner: e.target.value })}
               placeholder={ad ? ad.owner : "example@email.com"}
             />
           </label>
@@ -120,16 +117,16 @@ export default function FormAd({
             <p className="obligatory-field">Price</p>
             <input
               className={`${
-                !fields?.price && fields?.price !== 0 && formAdStyles.gray
+                !data?.price && data?.price !== 0 && formAdStyles.gray
               }`}
               type="number"
               name="price"
               id="price"
-              value={fields.price || ""}
+              value={data.price || ""}
               onChange={(e) => {
-                setFields({ ...fields, price: Number(e.target.value) });
+                setData({ ...data, price: Number(e.target.value) });
               }}
-              placeholder={ad && fields.price ? String(ad.price) : "0"}
+              placeholder={ad && data.price ? String(ad.price) : "0"}
             />
           </label>
 
@@ -137,12 +134,12 @@ export default function FormAd({
           <label htmlFor="imgUrl">
             <p>Image URL</p>
             <input
-              className={`${!fields?.imgUrl && formAdStyles.gray}`}
+              className={`${!data?.imgUrl && formAdStyles.gray}`}
               type="text"
               name="imgUrl"
               id="imgUrl"
-              value={fields.imgUrl || ""}
-              onChange={(e) => setFields({ ...fields, imgUrl: e.target.value })}
+              value={data.imgUrl || ""}
+              onChange={(e) => setData({ ...data, imgUrl: e.target.value })}
               placeholder={ad ? ad.imgUrl : "https://"}
             />
           </label>
@@ -151,13 +148,13 @@ export default function FormAd({
           <label htmlFor="location">
             <p>Location</p>
             <input
-              className={`${!fields?.location && formAdStyles.gray}`}
+              className={`${!data?.location && formAdStyles.gray}`}
               type="text"
               name="location"
               id="location"
-              value={fields.location || ""}
+              value={data.location || ""}
               onChange={(e) =>
-                setFields({ ...fields, location: e.target.value })
+                setData({ ...data, location: e.target.value })
               }
               placeholder={ad ? ad.location : "Enter location"}
             />
@@ -172,7 +169,7 @@ export default function FormAd({
                   name="category"
                   defaultValue={ad?.category?.id}
                   onChange={(e) =>
-                    setFields({ ...fields, category: Number(e.target.value) })
+                    setData({ ...data, category: {id: 1, name: e.target.value} })
                   }
                 >
                   <option className={formAdStyles.gray}>Choose category</option>
@@ -191,9 +188,7 @@ export default function FormAd({
             )}
           </label>
           <button
-            className={
-              isSucces ? `button ${formAdStyles["disabled-button"]}` : "button"
-            }
+            className={""}
             type="submit"
           >
             Submit

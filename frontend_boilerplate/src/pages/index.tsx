@@ -1,4 +1,4 @@
-import styles from "@/styles/Home.module.css";
+import homeStyles from "@/styles/Home.module.css";
 import { Layout } from "@/components/Layout";
 import { RecentAds } from "@/components/RecentAds";
 

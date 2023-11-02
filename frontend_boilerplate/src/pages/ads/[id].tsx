@@ -1,37 +1,33 @@
-import { API_URL } from "@/config";
 import adStyles from "./[id].module.css";
 import { Layout } from "@/components/Layout";
-import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { AdCardProps } from "@/components/AdCard";
 import Link from "next/link";
-import { callCustomDelete } from "@/axiosRequests/deleteData";
 import ButtonDelete from "@/components/buttons/ButtonDelete";
 
+const ad = {
+  id: 3,
+  title: "Super car",
+  description: "2024",
+  owner: "Ado",
+  price: 11000,
+  imgUrl:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
+  location: "Lyon",
+  category: {
+    id: "1",
+    name: "Updated categrory",
+  },
+  tags: [
+    {
+      id: "3",
+      name: "Tag3",
+    },
+  ],
+};
+
+
 export default function Ad() {
-  const [ad, setAd] = useState<AdCardProps | null>(null);
-  const [id, setId] = useState<string>("");
-
   const router = useRouter();
-
-  useEffect(() => {
-    if (router.asPath !== router.route) {
-      const id = router.query.id as string;
-      setId(id);
-      fetchAd(id);
-    }
-  }, [router]);
-
-  async function fetchAd(id: string) {
-    try {
-      const adFetch = await axios.get(API_URL + `/ads/${id}`);
-
-      setAd(adFetch.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <Layout title="Ad">
@@ -50,9 +46,9 @@ export default function Ad() {
               <hr className="separator" />
               <div className={adStyles["ad-details-owner"]}>
                 Annoncée publiée par <b>{ad.owner}</b>{" "}
-                {String(ad.createdAt).split("T")[0]}
+                {/* {String(ad.createdAt).split("T")[0]}
                 {" at "}
-                {String(ad.createdAt).split("T")[1].split(".")[0]}.
+                {String(ad.createdAt).split("T")[1].split(".")[0]}. */}
               </div>
               <Link href={`/ads/update?id=${ad.id}`} className="button">
                 Update Ad
@@ -75,7 +71,7 @@ export default function Ad() {
                 </svg>
                 Envoyer un email
               </Link>
-              <ButtonDelete url="/ads" id={id} redirect={true} />
+              <ButtonDelete id={ad.id}/>
             </div>
           </section>
         </main>

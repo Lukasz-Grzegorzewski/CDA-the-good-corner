@@ -1,15 +1,16 @@
-.card{
+.card-container {
+  width: 300px;
+  height: 80px;
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 
   padding: 20px;
   border-radius: 10px;
-
-  width: 300px;
-  height: 80px;
-
   text-decoration: none;
   color: #666;
+}
+
+.card{
 }
 
 .card-title{

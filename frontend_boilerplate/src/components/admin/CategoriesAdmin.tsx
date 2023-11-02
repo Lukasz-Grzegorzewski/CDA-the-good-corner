@@ -1,34 +1,21 @@
 import adminStyles from "./CategoriesAdmin.module.css";
-import { useCustomFetch } from "@/axiosRequests/fetchData";
-import { API_URL } from "@/config";
 import CardCategory, { CardCategoryProps } from "./CardCategory";
-import { useEffect, useState } from "react";
+import { CategoryType } from "@/types";
 
-export type CategoriesAdminPropsType = {
-  APIData: CardCategoryProps[];
-  isLoading: boolean;
-  isSucces: boolean;
-  error: any;
-  callCustomFetch: Function;
-};
+type CategoriesAdminProps = {
+  categories: CategoryType[];
+}
 
-export default function CategoriesAdmin({
-  APIData,
-  isLoading,
-  isSucces,
-  error,
-  callCustomFetch,
-}: CategoriesAdminPropsType) {
+export default function CategoriesAdmin({categories}: CategoriesAdminProps) {
   return (
     <section className={adminStyles["category-cards-container"]}>
-      {APIData &&
-        APIData.map((category: CardCategoryProps) => (
+      {categories &&
+        categories.map((category: CategoryType) => (
           <CardCategory
             key={category.id}
             name={category.name}
             id={category.id}
-            adsCount={category.adsCount}
-            callCustomFetch={callCustomFetch}
+            adsCount={10}
           />
         ))}
     </section>

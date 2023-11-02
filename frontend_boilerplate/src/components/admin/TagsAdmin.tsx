@@ -1,10 +1,21 @@
-import React from 'react'
-import { AdminContentPropsType } from './Admin'
+import React from "react";
+import { TagType } from "@/types";
 
-function TagsAdmin({APIData, isLoading, isSucces, error, callCustomFetch}: AdminContentPropsType) {
-  return (
-    <div>TagsAdmin</div>
-  )
+type TagsAdminProps = {
+  tags: TagType[];
 }
 
-export default TagsAdmin
+function TagsAdmin({tags}: TagsAdminProps) {
+  return (
+    tags &&
+    tags.map((item: TagType) => {
+      return (
+        <div key={item.id}>
+          <p>{item.name}</p>
+        </div>
+      );
+    })
+  );
+}
+
+export default TagsAdmin;

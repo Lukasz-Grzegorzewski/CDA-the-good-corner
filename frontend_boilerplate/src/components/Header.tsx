@@ -1,55 +1,25 @@
 import headerStyles from "./Header.module.css";
-
 import { FiShoppingCart } from "react-icons/fi";
-
 import Link from "next/link";
 import { Category } from "./Category";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-
-import { API_URL } from "@/config";
+import React, { useState } from "react";
 import { CategoryType } from "@/types";
 import BasketPopup from "./BasketPopup";
 import { useRouter } from "next/router";
 
-// const categories: CategoryProps[] = [
-//   { name: "Ameublement", link: "" },
-//   { name: "Électroménager", link: "" },
-//   { name: "Photographie", link: "" },
-//   { name: "Informatique", link: "" },
-//   { name: "Téléphonie", link: "" },
-//   { name: "Vélos", link: "" },
-//   { name: "Véhicules", link: "" },
-//   { name: "Sport", link: "" },
-//   { name: "Habillement", link: "" },
-//   { name: "Bébé", link: "" },
-//   { name: "Outillage", link: "" },
-//   { name: "Services", link: "" },
-//   { name: "Vacances", link: "" },
-// ];
+const categories: CategoryType[] = [
+  {id: 1, name: "Bikes"},
+  {id: 2, name: "Cars"}
+];
 
 type HeaderProps = {
   totalPrice: number;
 };
 
 export function Header({ totalPrice }: HeaderProps): React.ReactNode {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [isBasket, setIsBasket] = useState(false);
 
   const router = useRouter();
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  async function fetchCategories() {
-    try {
-      const categoriesFetch = await axios(API_URL + "/categories");
-      setCategories(categoriesFetch.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <header className={headerStyles["header"]}>

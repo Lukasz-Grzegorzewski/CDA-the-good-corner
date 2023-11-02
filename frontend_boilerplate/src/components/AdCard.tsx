@@ -1,57 +1,31 @@
 import Link from "next/link";
 import adCardStyles from "./AdCard.module.css";
 import { useRouter } from "next/router";
-import { API_URL } from "@/config";
-import axios from "axios";
 import { useState } from "react";
 import { AdType } from "@/types";
 import useTotalPrice from "@/context/totalPriceContext";
 import ButtonDelete from "./buttons/ButtonDelete";
 
-export type AdCardProps = AdType & {
-  callCustomFetch: () => void;
-};
+export type AdCardProps = AdType;
 
 export function AdCard({
   id,
   title,
   price,
-  imgUrl,
-  callCustomFetch,
+  imgUrl
 }: AdCardProps): React.ReactNode {
-  const [isSucces, setIsSucces] = useState(false);
-  const [isError, setIsError] = useState(false);
 
+  //BASKET
   const [numberOfArticles, setNumberOfArticles] = useState(1);
   const numberOfArticlesArr: number[] = Array.from(
     { length: 10 },
     (_, index) => index + 1
   );
   const { totalPrice, setTotalPrice } = useTotalPrice();
-
   const router = useRouter();
   const { basePath, pathname } = router;
 
-  async function deleteHandler() {
-    try {
-      const result = await axios.delete(API_URL + `/ads/${id}`);
-      if (result.status === 204) {
-        setIsSucces(true);
-      }
-    } catch (error) {
-      console.error(error);
-      setIsError(true);
-      setTimeout(() => {
-        setIsError(false);
-      }, 1000);
-    } finally {
-      setTimeout(() => {
-        setIsSucces(false);
-        callCustomFetch();
-      }, 1000);
-    }
-  }
-
+  // Add to basket handler
   function addHandler(price: number) {
     setTotalPrice(totalPrice + price);
   }
@@ -96,7 +70,7 @@ export function AdCard({
         </div>
       )}
 
-      <ButtonDelete url="/ads" id={id} reFetch={callCustomFetch} />
+      <ButtonDelete id={id} />
     </div>
   );
 }

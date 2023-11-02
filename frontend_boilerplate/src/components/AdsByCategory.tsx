@@ -1,35 +1,59 @@
 import adsByCategory from "./AdsByCategory.module.css";
-
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
-
 import { AdCard } from "./AdCard";
+import { useFetchCustom } from "@/gql_requests/fetchData";
 
-import { API_URL } from "@/config";
-import { AdType } from "@/types";
+const ads = [
+  {
+    id: 3,
+    title: "Super car",
+    description: "2024",
+    owner: "Ado",
+    price: 11000,
+    imgUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
+    location: "Lyon",
+    category: {
+      id: 1,
+      name: "Cars",
+    },
+    tags: [
+      {
+        id: 3,
+        name: "Tag3",
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Super car",
+    description: "2024",
+    owner: "Ado",
+    price: 3200,
+    imgUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
+    location: "Lyon",
+    category: {
+      id: 1,
+      name: "Cars",
+    },
+    tags: [
+      {
+        id: 3,
+        name: "Tag3",
+      },
+    ],
+  },
+];
 
 export default function AdsByCategory() {
-  const [ads, setAds] = useState<AdType[]>([]);
 
   const router = useRouter();
   // const { categoryId } = router.query;
   const params = Object.fromEntries(new URLSearchParams(location.search));
   const categoryId = params.categoryId
 
-
-  useEffect(() => {
-    fetchAds(categoryId);
-  }, [categoryId]);
-
-  async function fetchAds(id: string) {
-    try {
-      const result = await axios.get(API_URL + `/ads?categoryId=${id}`);
-      setAds(result.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  useFetchCustom(`/ads?categoryId=${categoryId}`);
 
   return (
     <main className="main-content">
@@ -46,9 +70,7 @@ export default function AdsByCategory() {
                 price={item.price}
                 imgUrl={item.imgUrl}
                 location={item.location}
-                createdAt={item.createdAt}
                 category={item.category}
-                callCustomFetch={() => fetchAds(String(categoryId))}
               />
             </div>
           ))}

@@ -1,80 +1,76 @@
 import adminStyles from "./Admin.module.css";
-import { useCustomFetch } from "@/axiosRequests/fetchData";
 import { useSearchParams } from "next/navigation";
-import { API_URL } from "@/config";
-import CardCategory, { CardCategoryProps } from "./CardCategory";
-import { useEffect, useState } from "react";
 import CategoriesAdmin from "./CategoriesAdmin";
-import { RecentAds } from "../RecentAds";
 import AdsAdmin from "./AdsAdmin";
 import TagsAdmin from "./TagsAdmin";
-import { AdType } from "@/types";
+import { AdType, CategoryType } from "@/types";
+import { useFetchCustom } from "@/gql_requests/fetchData";
 
-export type AdminContentPropsType = {
-  APIData: AdType[];
-  isLoading: boolean;
-  isSucces: boolean;
-  error: any;
-  callCustomFetch: Function;
-};
+// DATA
+const ads = [
+  {
+    id: 3,
+    title: "Super car",
+    description: "2024",
+    owner: "Ado",
+    price: 11000,
+    imgUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
+    location: "Lyon",
+    category: {
+      id: 1,
+      name: "Updated categrory",
+    },
+    tags: [
+      {
+        id: 3,
+        name: "Tag3",
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Super car",
+    description: "2024",
+    owner: "Ado",
+    price: 4000,
+    imgUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
+    location: "Lyon",
+    category: {
+      id: 1,
+      name: "Updated categrory",
+    },
+    tags: [
+      {
+        id: 3,
+        name: "Tag3",
+      },
+    ],
+  },
+];
+const categories: CategoryType[] = [
+  { id: 1, name: "Bikes" },
+  { id: 2, name: "Cars" },
+];
+const tags: CategoryType[] = [
+  { id: 1, name: "Tag 1" },
+  { id: 2, name: "Tag 2" },
+];
 
 export default function Admin() {
-  const {
-    APIData: adsFetch,
-    isLoading: isLoadingFetchAds,
-    isSucces: isSuccesFetchAds,
-    error: errorFetchAds,
-    callCustomFetch: fetchAds,
-  } = useCustomFetch("/ads");
-
-  const {
-    APIData: categoriesFetch,
-    isLoading: isLoadingFetchCategories,
-    isSucces: isSuccesFetchCategories,
-    error: errorFetchCategories,
-    callCustomFetch: fetchCategories,
-  } = useCustomFetch("/categories");
-
-  const {
-    APIData: tagsFetch,
-    isLoading: isLoadingFetchTags,
-    isSucces: isSuccesFetchTags,
-    error: errorFetchTags,
-    callCustomFetch: fetchTags,
-  } = useCustomFetch("/tags");
-
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("item") || "ads";
 
+  useFetchCustom(`admin/${queryParam}`);
+
   return (
     <section className={adminStyles["admin-content"]}>
-      {queryParam === "ads" && (
-        <AdsAdmin
-          APIData={adsFetch}
-          isLoading={isLoadingFetchAds}
-          isSucces={isSuccesFetchAds}
-          error={errorFetchAds}
-          callCustomFetch={fetchAds}
-        />
-      )}
+      {queryParam === "ads" && <AdsAdmin ads={ads} />}
       {queryParam === "categories" && (
-        <CategoriesAdmin
-          APIData={categoriesFetch}
-          isLoading={isLoadingFetchCategories}
-          isSucces={isSuccesFetchCategories}
-          error={errorFetchCategories}
-          callCustomFetch={fetchCategories}
-        />
+        <CategoriesAdmin categories={categories} />
       )}
-      {queryParam === "tags" && (
-        <TagsAdmin
-          APIData={tagsFetch}
-          isLoading={isLoadingFetchTags}
-          isSucces={isSuccesFetchTags}
-          error={errorFetchTags}
-          callCustomFetch={fetchTags}
-        />
-      )}
+      {queryParam === "tags" && <TagsAdmin tags={tags} />}
     </section>
   );
 }
