@@ -30,10 +30,10 @@ export class Ad extends BaseEntity {
 
   @Column({ nullable: true, length: 100 })
   @ValidateIf((object, value) => !!value)
-  @Field()
+  @Field({ nullable: true })
   description!: string;
 
-  @Column({nullable: true, length: 100 })
+  @Column({ nullable: true, length: 100 })
   @Field()
   owner!: string;
 
@@ -43,14 +43,16 @@ export class Ad extends BaseEntity {
   price!: number;
 
   @Column({ nullable: true })
-  @Field()
+  @Field({ nullable: true })
   imgUrl!: string;
 
   @Column({ nullable: true, length: 100 })
-  @Field()
+  @Field({ nullable: true })
   location!: string;
 
-  @ManyToOne(() => Category, (category) => category.ads, { onDelete: "CASCADE" })
+  @ManyToOne(() => Category, (category) => category.ads, {
+    onDelete: "CASCADE",
+  })
   @Field(() => Category, { nullable: true })
   category!: Category;
 
@@ -64,8 +66,9 @@ export class Ad extends BaseEntity {
   createdAt!: Date;
 }
 
+// Create input fields
 @InputType()
-export class AdInput {
+export class AdCreateInput {
   @Field()
   title!: string;
 
@@ -73,14 +76,48 @@ export class AdInput {
   price!: number;
 
   @Field()
-  imgUrl!: string;
+  owner!: string;
 
-  @Field()
-  description!: string;
+  @Field({ nullable: true })
+  description?: string;
 
-  @Field()
-  category!: ObjectId;
+  @Field({ nullable: true })
+  imgUrl?: string;
 
-  @Field(() => [ObjectId])
-  tags!: ObjectId[];
+  @Field({ nullable: true })
+  location?: string;
+
+  @Field({ nullable: true })
+  category?: ObjectId;
+
+  @Field(() => [ObjectId], { nullable: true })
+  tags?: ObjectId[];
+}
+
+// Update input fields
+@InputType()
+export class AdUpdateInput {
+  @Field({ nullable: true })
+  title?: string;
+
+  @Field(() => Int, { nullable: true })
+  price?: number;
+
+  @Field({ nullable: true })
+  owner?: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field({ nullable: true })
+  imgUrl?: string;
+
+  @Field({ nullable: true })
+  location?: string;
+
+  @Field({ nullable: true })
+  category?: ObjectId;
+
+  @Field(() => [ObjectId], { nullable: true })
+  tags?: ObjectId[];
 }

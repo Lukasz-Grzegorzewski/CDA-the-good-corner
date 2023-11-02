@@ -27,14 +27,16 @@ export class Tag extends BaseEntity {
   ads!: Ad[];
 }
 
+// Create input fields
 @InputType()
-export class TagInput {
+export class TagCreateInput {
   @Field()
   name!: string;
+}
 
-  @Field()
-  category!: ObjectId;
-
-  @Field(() => [ObjectId])
-  ads!: ObjectId[];
+// Update input fields
+@InputType()
+export class TagUpdateInput {
+  @Field({ nullable: true})
+  name?: string;
 }

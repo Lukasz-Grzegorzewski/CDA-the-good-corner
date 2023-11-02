@@ -35,9 +35,6 @@ function ButtonDelete({
       const response = await callCustomDelete(url);
       
       if (response.isSucces) {
-        console.log("yes");
-        
-        
         setNotifPopup({ ...notifPopup, isSucces: true });
         setTimeout(() => {
           if (redirect && redirectUrl) {
@@ -53,7 +50,6 @@ function ButtonDelete({
         }
       } else {
         setNotifPopup({ ...notifPopup, isError: true });
-        console.log(response.errorMessage);
       }
     }
   }

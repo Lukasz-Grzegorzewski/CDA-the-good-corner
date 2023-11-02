@@ -15,8 +15,6 @@ export function RecentAds(): React.ReactNode {
   const refDialog = useRef<HTMLDialogElement>(null);
 
   function handleFilterClick() {
-    console.log(`refDialog : `, refDialog);
-
     refDialog.current?.showModal();
   }
  

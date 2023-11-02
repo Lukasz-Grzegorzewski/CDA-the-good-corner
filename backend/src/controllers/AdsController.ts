@@ -15,10 +15,7 @@ export class AdsController extends Controller {
   filter[prop]*/
   getAll = async (req: Request, res: Response) => {
     const { filter, sort, page, limit, categoryId } = req.query;
-    console.log(`page : `, page);
-    console.log(`limit : `, limit);
-    
-
+   
     const options = { relations: { category: true, tags: true } };
     const where = {};
     const order = {};
@@ -109,7 +106,6 @@ export class AdsController extends Controller {
 
     //FINAL OPTIONS MERGE
     Object.assign(options, { where }, { order } );
-    console.log(options);
     
     const count = await Ad.count();
     const resultAds = await Ad.find(options);
@@ -161,9 +157,7 @@ export class AdsController extends Controller {
 
     const ad = await Ad.findOneBy({ id });
 
-    if (ad) {
-      console.log(inputs);
-      
+    if (ad) {      
       Object.assign(ad, inputs, { id: ad.id });
       const status = await ad.save();
 
@@ -205,7 +199,6 @@ export class AdsController extends Controller {
 
     if (ad) {
       const removedAd = await ad.remove();
-      console.log(removedAd);
       
       if (removedAd) res.status(200).json({id});
       else res.sendStatus(500);

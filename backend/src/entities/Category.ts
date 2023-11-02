@@ -18,7 +18,7 @@ export class Category extends BaseEntity {
   id!: number;
 
   @Column({ length: 100 })
-  @Length(10, 100)
+  @Length(2, 100)
   @Field()
   name!: string;
 
@@ -27,11 +27,16 @@ export class Category extends BaseEntity {
   ads!: Ad[];
 }
 
+// Create input fields
 @InputType()
-export class CategoryInput {
+export class CategoryCreateInput {
   @Field()
   name!: string;
+}
 
-  @Field(() => [ObjectId])
-  ads!: ObjectId[];
+// Update input fields
+@InputType()
+export class CategoryUpdateInput {
+  @Field({ nullable: true })
+  name?: string;
 }
