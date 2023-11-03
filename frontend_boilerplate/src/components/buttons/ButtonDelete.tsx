@@ -1,4 +1,4 @@
-import { useDeleteCustom } from "@/gql_requests/deleteData";
+import { useDeleteCustom } from "@/graphgql/deleteData";
 import React from "react";
 
 type ButtonDeleteProps = {

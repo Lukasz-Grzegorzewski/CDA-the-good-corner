@@ -1,28 +1,10 @@
+import { mutationCreateAd } from "@/graphgql/ad/mutationAds";
 import formAdStyles from "./FormAd.module.css";
-import { useCreateCustom } from "@/gql_requests/createData";
-import { AdUpdateType, useUpdateCustom } from "@/gql_requests/updateData";
-import { AdType, CategoryType } from "@/types";
+import { useUpdateCustom } from "@/graphgql/updateData";
+import { AdType, CategoryType, MutationAdType } from "@/types";
+import { useMutation, useQuery } from "@apollo/client";
 import { FormEvent, useState } from "react";
-
-const adToCreate = {
-  title: "Super car",
-  description: "2024",
-  owner: "Ado",
-  price: 11000,
-  imgUrl:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
-  location: "Lyon",
-  category: {
-    id: 1,
-    name: "Updated categrory",
-  },
-  tags: [
-    {
-      id: 3,
-      name: "Tag3",
-    },
-  ],
-};
+import { NewAdType } from "./NewAd";
 
 const categories = [
   { id: 1, name: "Bikes" },
@@ -36,7 +18,7 @@ type FormAdProps = {
 };
 
 export default function FormAd({ ad, type, title }: FormAdProps) {
-  const [data, setData] = useState<AdUpdateType>({
+  const [data, setData] = useState<MutationAdType>({
     title: "",
     description: "",
     owner: "",
@@ -46,21 +28,30 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
     category: undefined,
     tags: undefined,
   });
+
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   setTimeout(() => {
     setIsLoadingCategories(false);
   }, 2000);
 
+  const [createAd] = useMutation(mutationCreateAd);
+
   function onSubmitHandler(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries()) as unknown as AdType;
+    // const form = event.target as HTMLFormElement;
+    // const formData = new FormData(form);
+    // const dataF = Object.fromEntries(formData.entries()) as unknown as AdType;
 
-    if (ad) {
-      useUpdateCustom(data);
+    if (type === "update") {
+      console.log("update.........");
+
+      // useUpdateCustom(data);
     } else {
-      useCreateCustom(data);
+      console.log("Create.........");
+
+      createAd({ variables: { data } })
+        .then((res) => console.log(`res : `, res))
+        .catch((err) => console.log(`err : `, err));
     }
   }
 
@@ -153,9 +144,7 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
               name="location"
               id="location"
               value={data.location || ""}
-              onChange={(e) =>
-                setData({ ...data, location: e.target.value })
-              }
+              onChange={(e) => setData({ ...data, location: e.target.value })}
               placeholder={ad ? ad.location : "Enter location"}
             />
           </label>
@@ -169,7 +158,10 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
                   name="category"
                   defaultValue={ad?.category?.id}
                   onChange={(e) =>
-                    setData({ ...data, category: {id: 1, name: e.target.value} })
+                    setData({
+                      ...data,
+                      category: { id: parseInt(e.target.value) },
+                    })
                   }
                 >
                   <option className={formAdStyles.gray}>Choose category</option>
@@ -187,10 +179,7 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
               </select>
             )}
           </label>
-          <button
-            className={""}
-            type="submit"
-          >
+          <button className={""} type="submit">
             Submit
           </button>
         </form>

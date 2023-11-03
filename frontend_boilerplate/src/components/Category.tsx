@@ -2,6 +2,7 @@ import categoryStyles from "./Category.module.css";
 import { useRouter } from "next/router";
 
 import { CategoryType } from "@/types";
+import Link from "next/link";
 
 export type CategoryProps = CategoryType;
 
@@ -10,11 +11,11 @@ export function Category(props: CategoryType): React.ReactNode {
   const { basePath } = router;
 
   return (
-    <a
-      href={`${basePath}/categories/ads?categoryId=${props.id}`}
+    <Link
+      href={`${basePath}/ads/category/${props.id}`}
       className={categoryStyles["category-navigation-link"]}
     >
       {props.name}
-    </a>
+    </Link>
   );
 }

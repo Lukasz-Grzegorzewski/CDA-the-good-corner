@@ -1,5 +1,5 @@
 import adminStyles from "./CategoriesAdmin.module.css";
-import CardCategory, { CardCategoryProps } from "./CardCategory";
+import CardCategory, { CardCategoryProps } from "../CardCategory";
 import { CategoryType } from "@/types";
 
 type CategoriesAdminProps = {

@@ -28,7 +28,20 @@ export class AdsResolver {
   @Mutation(() => Ad)
   async createAd(@Arg("data") data: AdCreateInput): Promise<Ad | null> {
     const newAd = new Ad();
-    Object.assign(newAd, data);
+
+    const formatter = new Intl.DateTimeFormat(data.language, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
+      timeZone: data.timeZone,
+    });
+    const clientDateTimeString = formatter.format(new Date());
+
+    Object.assign(newAd, data, { createAd: clientDateTimeString });
 
     const errors = await validate(newAd);
     if (errors.length === 0) {
@@ -37,8 +50,6 @@ export class AdsResolver {
         where: { id: newAd.id },
         relations: { category: true, tags: true },
       });
-      console.log(`adToReturn : `, adToReturn);
-
       return adToReturn;
     } else {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);

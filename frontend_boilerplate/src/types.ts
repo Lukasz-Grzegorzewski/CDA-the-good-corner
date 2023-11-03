@@ -6,8 +6,19 @@ export type AdType = {
   description?: string;
   imgUrl?: string;
   location?: string;
-  createdAt?: Date;
   category?: CategoryType;
+  tags?: TagType[];
+};
+
+export type MutationAdType = {
+  id?: number;
+  owner?: string;
+  title?: string;
+  price?: number;
+  description?: string;
+  imgUrl?: string;
+  location?: string;
+  category?: {id: number};
   tags?: TagType[];
 };
 

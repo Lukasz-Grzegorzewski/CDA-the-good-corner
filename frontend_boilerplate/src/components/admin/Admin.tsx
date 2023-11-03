@@ -4,7 +4,7 @@ import CategoriesAdmin from "./CategoriesAdmin";
 import AdsAdmin from "./AdsAdmin";
 import TagsAdmin from "./TagsAdmin";
 import { AdType, CategoryType } from "@/types";
-import { useFetchCustom } from "@/gql_requests/fetchData";
+// import { useFetchCustom } from "@/gql_requests/fetchData";
 
 // DATA
 const ads = [
@@ -62,7 +62,7 @@ export default function Admin() {
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("item") || "ads";
 
-  useFetchCustom(`admin/${queryParam}`);
+  // useFetchCustom(`admin/${queryParam}`);
 
   return (
     <section className={adminStyles["admin-content"]}>

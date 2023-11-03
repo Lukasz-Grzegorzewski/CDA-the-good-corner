@@ -1,7 +1,7 @@
 import adsByCategory from "./AdsByCategory.module.css";
 import { useRouter } from "next/router";
 import { AdCard } from "./AdCard";
-import { useFetchCustom } from "@/gql_requests/fetchData";
+// import { useFetchCustom } from "@/gql_requests/fetchData";
 
 const ads = [
   {
@@ -46,14 +46,14 @@ const ads = [
   },
 ];
 
-export default function AdsByCategory() {
+export default function AdsByCategory({id}: {id: number}) {
 
   const router = useRouter();
   // const { categoryId } = router.query;
   const params = Object.fromEntries(new URLSearchParams(location.search));
   const categoryId = params.categoryId
 
-  useFetchCustom(`/ads?categoryId=${categoryId}`);
+  // useFetchCustom(`/ads?categoryId=${categoryId}`);
 
   return (
     <main className="main-content">

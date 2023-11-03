@@ -2,7 +2,7 @@ import Link from "next/link";
 import cardCategoryStyles from "./CardCategory.module.css";
 import { CategoryType } from "@/types";
 import { useRouter } from "next/router";
-import ButtonDelete from "../buttons/ButtonDelete";
+import ButtonDelete from "./buttons/ButtonDelete";
 
 export type CardCategoryProps = CategoryType & {
   adsCount: number;
