@@ -1,15 +1,11 @@
-import { mutationCreateAd } from "@/graphgql/ad/mutationAds";
+import { mutationCreateAd, mutationUpdateAd } from "@/graphgql/ad/mutationAds";
 import formAdStyles from "./FormAd.module.css";
-import { useUpdateCustom } from "@/graphgql/updateData";
 import { AdType, CategoryType, MutationAdType } from "@/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { FormEvent, useState } from "react";
-import { NewAdType } from "./NewAd";
-
-const categories = [
-  { id: 1, name: "Bikes" },
-  { id: 2, name: "Cars" },
-];
+import { queryCategories } from "@/graphgql/category/queryCategories";
+import { useRouter } from "next/router";
+import { queryAd_Id, queryAds } from "@/graphgql/ad/queryAds";
 
 type FormAdProps = {
   ad?: AdType;
@@ -19,41 +15,50 @@ type FormAdProps = {
 
 export default function FormAd({ ad, type, title }: FormAdProps) {
   const [data, setData] = useState<MutationAdType>({
-    title: "",
-    description: "",
-    owner: "",
-    price: 0,
-    imgUrl: "",
-    location: "",
-    category: undefined,
-    tags: undefined,
+    title: ad?.title || "",
+    description: ad?.description || "",
+    owner: ad?.owner || "",
+    price: ad?.price || 0,
+    imgUrl: ad?.imgUrl || "",
+    location: ad?.location || "",
+    category: ad?.category ? { id: ad.category.id } : undefined,
+    tags: ad?.tags?.map((tag) => ({ id: tag.id })) || [],
   });
+  const router = useRouter();
 
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
-  setTimeout(() => {
-    setIsLoadingCategories(false);
-  }, 2000);
+  //FETCH categories
+  const {
+    data: allCategories,
+    error,
+    loading,
+  } = useQuery<{ items: CategoryType[] }>(queryCategories);
+  const categories = allCategories ? allCategories.items : [];
 
-  const [createAd] = useMutation(mutationCreateAd);
+  //UPDATE ad
+  const [createAd] = useMutation(mutationCreateAd, {
+    refetchQueries: [queryAds],
+  });
+  const [updateAd] = useMutation(mutationUpdateAd, {
+    refetchQueries: [queryAds, queryAd_Id],
+  });
 
   function onSubmitHandler(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    // const form = event.target as HTMLFormElement;
-    // const formData = new FormData(form);
-    // const dataF = Object.fromEntries(formData.entries()) as unknown as AdType;
-
-    if (type === "update") {
-      console.log("update.........");
-
-      // useUpdateCustom(data);
-    } else {
-      console.log("Create.........");
-
+    if (type === "update" && ad) {
+      updateAd({ variables: { id: ad.id, data } })
+        .then((res) => {
+          router.push(`/ads/${res.data.item.id}`);
+        })
+        .catch((err) => console.log(`err : `, err));
+    } else if (type === "new") {
       createAd({ variables: { data } })
-        .then((res) => console.log(`res : `, res))
+        .then((res) => {
+          router.replace(`/ads/${res.data.item.id}`);
+        })
         .catch((err) => console.log(`err : `, err));
     }
   }
+  console.log(type == "new" || (type == "update" && ad));
 
   return type == "new" || (type == "update" && ad) ? (
     <>
@@ -150,9 +155,9 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
           </label>
 
           {/*CATEGORY*/}
-          <label className={isLoadingCategories ? "loading" : ""}>
+          <label className={loading ? "loading" : ""}>
             <p className="obligatory-field">Category</p>
-            {categories.length > 0 ? (
+            {categories && categories.length > 0 ? (
               <>
                 <select
                   name="category"
@@ -179,7 +184,7 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
               </select>
             )}
           </label>
-          <button className={""} type="submit">
+          <button className={"button"} disabled={loading} type="submit">
             Submit
           </button>
         </form>
@@ -190,11 +195,7 @@ export default function FormAd({ ad, type, title }: FormAdProps) {
     </>
   ) : (
     <>
-      <h1>
-        Ad not found
-        <br />
-        404
-      </h1>
+      <h1>Ad not found</h1>
     </>
   );
 }

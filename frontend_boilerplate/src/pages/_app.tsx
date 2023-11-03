@@ -11,7 +11,9 @@ import { API_URL } from "@/config";
 
 const client = new ApolloClient({
   uri: API_URL,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    addTypename: false,
+  }),
   connectToDevTools: true
 });
 

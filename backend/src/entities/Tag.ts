@@ -1,6 +1,7 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   PrimaryGeneratedColumn,
@@ -25,6 +26,10 @@ export class Tag extends BaseEntity {
   @ManyToMany(() => Ad, (ad) => ad.tags)
   @Field(() => [Ad], { nullable: true })
   ads!: Ad[];
+
+  @CreateDateColumn()
+  @Field()
+  createdAt!: Date;
 }
 
 // Create input fields

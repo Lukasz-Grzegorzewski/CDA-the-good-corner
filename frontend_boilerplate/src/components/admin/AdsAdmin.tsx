@@ -22,6 +22,7 @@ function AdsAdmin({ads}: AdsAdminProps)  {
             imgUrl={item.imgUrl}
             location={item.location}
             category={item.category}
+            createdAt={item.createdAt}
           />
         );
       })}

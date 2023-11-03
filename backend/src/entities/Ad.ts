@@ -88,12 +88,6 @@ export class AdCreateInput {
   location?: string;
 
   @Field({ nullable: true })
-  language?: string;
-
-  @Field({ nullable: true })
-  timeZone?: string;
-
-  @Field({ nullable: true })
   category?: ObjectId;
 
   @Field(() => [ObjectId], { nullable: true })

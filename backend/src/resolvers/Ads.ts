@@ -1,7 +1,6 @@
-import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Ad, AdCreateInput, AdUpdateInput } from "../entities/Ad";
 import { validate } from "class-validator";
-import { ObjectId } from "../entities/ObjectId";
 import { merge } from "../_helpers/helpers";
 
 @Resolver(Ad)
@@ -15,12 +14,12 @@ export class AdsResolver {
 
   // AD BY ID
   @Query(() => Ad)
-  async ad_Id(@Arg("id") { id }: ObjectId): Promise<Ad | null> {
+  async ad_Id(@Arg("id", () => ID) id: number): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },
       relations: { category: true, tags: true },
-    });
-
+    });   
+    
     return ad;
   }
 
@@ -28,20 +27,10 @@ export class AdsResolver {
   @Mutation(() => Ad)
   async createAd(@Arg("data") data: AdCreateInput): Promise<Ad | null> {
     const newAd = new Ad();
-
-    const formatter = new Intl.DateTimeFormat(data.language, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZoneName: "short",
-      timeZone: data.timeZone,
-    });
-    const clientDateTimeString = formatter.format(new Date());
-
-    Object.assign(newAd, data, { createAd: clientDateTimeString });
+    
+    //add createdAt property
+    const date = new Date();
+    Object.assign(newAd, data, { createAd: date });
 
     const errors = await validate(newAd);
     if (errors.length === 0) {
@@ -58,7 +47,7 @@ export class AdsResolver {
 
   // DELETE AD
   @Mutation(() => Ad, { nullable: true })
-  async deleteAd(@Arg("id", () => Int) id: number): Promise<Ad | null> {
+  async deleteAd(@Arg("id", () => ID) id: number): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },
       relations: { category: true, tags: true },
@@ -75,18 +64,18 @@ export class AdsResolver {
   // UPDATE AD
   @Mutation(() => Ad)
   async updateAd(
-    @Arg("id", () => Int) id: number,
+    @Arg("id", () => ID) id: number,
     @Arg("data") data: AdUpdateInput
   ): Promise<Ad | null> {
+    
     const ad = await Ad.findOne({
       where: { id },
       relations: { tags: true },
     });
 
     if (ad) {
-      // merge(ad, data);
+      merge(ad, data);
       Object.assign(ad, data);
-      console.log(`ad : `, ad);
 
       const errors = await validate(ad);
       if (errors.length === 0) {

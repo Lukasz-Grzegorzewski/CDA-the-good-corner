@@ -1,3 +1,5 @@
+import { off } from "process";
+
 export type AdType = {
   id: number;
   owner: string;
@@ -6,6 +8,7 @@ export type AdType = {
   description?: string;
   imgUrl?: string;
   location?: string;
+  createdAt: string;
   category?: CategoryType;
   tags?: TagType[];
 };
@@ -19,7 +22,7 @@ export type MutationAdType = {
   imgUrl?: string;
   location?: string;
   category?: {id: number};
-  tags?: TagType[];
+  tags?: Omit<TagType, "name">[];
 };
 
 export type CategoryType = {

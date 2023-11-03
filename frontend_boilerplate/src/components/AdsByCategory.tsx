@@ -1,6 +1,9 @@
 import adsByCategory from "./AdsByCategory.module.css";
 import { useRouter } from "next/router";
 import { AdCard } from "./AdCard";
+import { CategoryType } from "@/types";
+import { queryCategories } from "@/graphgql/category/queryCategories";
+import { useQuery } from "@apollo/client";
 // import { useFetchCustom } from "@/gql_requests/fetchData";
 
 const ads = [
@@ -13,6 +16,7 @@ const ads = [
     imgUrl:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
     location: "Lyon",
+    createdAt: "2023-11-03 12:32:10",
     category: {
       id: 1,
       name: "Cars",
@@ -33,6 +37,7 @@ const ads = [
     imgUrl:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
     location: "Lyon",
+    createdAt: "2023-11-03 12:32:10",
     category: {
       id: 1,
       name: "Cars",
@@ -46,12 +51,14 @@ const ads = [
   },
 ];
 
-export default function AdsByCategory({id}: {id: number}) {
-
+export default function AdsByCategory({ id }: { id: number }) {
   const router = useRouter();
   // const { categoryId } = router.query;
   const params = Object.fromEntries(new URLSearchParams(location.search));
-  const categoryId = params.categoryId
+  const categoryId = params.categoryId;
+
+  const {data, error, loading} = useQuery<{items: CategoryType[]}>(queryCategories);
+  const categories = data ? data.items : [];
 
   // useFetchCustom(`/ads?categoryId=${categoryId}`);
 
@@ -71,6 +78,7 @@ export default function AdsByCategory({id}: {id: number}) {
                 imgUrl={item.imgUrl}
                 location={item.location}
                 category={item.category}
+                createdAt={item.createdAt}
               />
             </div>
           ))}

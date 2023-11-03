@@ -13,6 +13,7 @@ function ButtonsPagination({
   pageQuery,
   limitQuery,
 }: ButtonsPaginationProps) {
+  
   const router = useRouter();
   const maxPages = Math.ceil(count / Number(limitQuery));
   const buttons = [];

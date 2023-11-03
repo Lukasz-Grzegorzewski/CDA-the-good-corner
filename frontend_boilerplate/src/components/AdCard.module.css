@@ -3,34 +3,38 @@
   border-radius: 8px;
   color: inherit;
   background-color: white;
-  width: 250px;
-  height: 300px;
+  width: 150px;
+  height: 200px;
 }
 
 .ad-card-link {
   height: 100%;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-content: space-between;
-  text-decoration: inherit;
-  color: inherit;
-  padding-bottom: 10px;
 
+  color: inherit;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.img-container{
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .ad-card-image {
-  width: 80%;
+  max-width: 80%;
   border-radius: 8px;
-  margin: 20px auto;
+  /* margin: 20px auto; */
   padding: 10px;
 }
 
 .ad-card-text {
   padding: 12px;
-  font-size: 18px;
+  font-size: .8rem;
   display: flex;
   justify-content: space-between;
   font-weight: 100;

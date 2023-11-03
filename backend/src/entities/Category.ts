@@ -1,6 +1,7 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -25,6 +26,10 @@ export class Category extends BaseEntity {
   @OneToMany(() => Ad, (ad) => ad.category)
   @Field(() => [Ad], { nullable: true })
   ads!: Ad[];
+
+  @CreateDateColumn()
+  @Field()
+  createdAt!: Date;
 }
 
 // Create input fields

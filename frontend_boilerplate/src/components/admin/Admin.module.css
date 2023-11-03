@@ -1,9 +1,9 @@
 .admin-content {
   width: 90vw;
   height: calc(100vh - (200px));
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.45);
   border-radius: 10px;
-  padding: 10px;
+  padding: 5px;
   margin: 2px auto;
   overflow-y: hidden;
 }

@@ -1,11 +1,11 @@
 import { Layout } from "@/components/Layout";
-import UpdateAd from "@/components/UpdateAd";
+import EditAd from "@/components/EditAd";
 
-export default function Update() {
+export default function Edit() {
 
   return (
     <Layout title="Update">
-      <UpdateAd />
+      <EditAd />
     </Layout>
   );
 }

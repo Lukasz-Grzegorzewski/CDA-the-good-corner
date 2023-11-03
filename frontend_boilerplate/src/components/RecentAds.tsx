@@ -12,14 +12,7 @@ export function RecentAds(): React.ReactNode {
   const {data, error, loading} = useQuery<{items: AdType[]}>(queryAds);
   const ads = data ? data.items : [];
 
-  const clientOptions = {
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    language: navigator.language || "en-GB",
-  }
-console.log(`clientOptions.timeZone : `, clientOptions.timeZone);
-
-
-    //DIALOG state & ref
+  //DIALOG state & ref
   const refDialog = useRef<HTMLDialogElement>(null);
   function handleFilterClick() {
     refDialog.current?.showModal();
@@ -58,7 +51,9 @@ console.log(`clientOptions.timeZone : `, clientOptions.timeZone);
               price={ad.price}
               imgUrl={ad.imgUrl}
               location={ad.location}
+              createdAt={ad.createdAt}
               category={ad.category}
+              tags={ad.tags}
             />
           </div>
         ))}

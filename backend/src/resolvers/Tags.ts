@@ -1,7 +1,6 @@
 import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Tag, TagCreateInput, TagUpdateInput } from "../entities/Tag";
 import { validate } from "class-validator";
-import { ObjectId } from "../entities/ObjectId";
 
 @Resolver(Tag)
 export class TagsResolver {
@@ -16,7 +15,7 @@ export class TagsResolver {
 
   // TAG BY ID
   @Query(() => Tag)
-  async tag_Id(@Arg("id") { id }: ObjectId): Promise<Tag | null> {
+  async tag_Id(@Arg("id", () => ID) id : number): Promise<Tag | null> {
     const tag = await Tag.findOne({
       where: { id },
       relations: { ads: true },
@@ -29,7 +28,10 @@ export class TagsResolver {
   @Mutation(() => Tag)
   async createTag(@Arg("data") data: TagCreateInput): Promise<Tag> {
     const newTag = new Tag();
-    Object.assign(newTag, data);
+
+    //add createdAt property
+    const date = new Date();
+    Object.assign(newTag, data, { createAd: date });
 
     const errors = await validate(newTag);
     if (errors.length === 0) {
@@ -42,25 +44,28 @@ export class TagsResolver {
 
   // DELETE TAG
   @Mutation(() => Tag, { nullable: true })
-  async deleteTag(@Arg("id", () => Int) id: number): Promise<Tag | null> {
+  async deleteTag(@Arg("id", () => ID) id: number): Promise<Tag | null> {
     const tag = await Tag.findOne({
-      where: { id }
+      where: { id },
     });
 
     if (tag) {
       await tag.remove();
-      tag.id = id
+      tag.id = id;
     }
 
-    return tag
+    return tag;
   }
 
   // UPDATE TAG
   @Mutation(() => Tag)
-  async updateTag(@Arg("id", () => Int) id: number, @Arg("data") data: TagUpdateInput): Promise<Tag | null> {
+  async updateTag(
+    @Arg("id", () => ID) id: number,
+    @Arg("data") data: TagUpdateInput
+  ): Promise<Tag | null> {
     const tag = await Tag.findOne({
       where: { id },
-      relations: { ads: true }
+      relations: { ads: true },
     });
 
     if (tag) {
@@ -68,6 +73,6 @@ export class TagsResolver {
       await tag.save();
     }
 
-    return tag
+    return tag;
   }
 }

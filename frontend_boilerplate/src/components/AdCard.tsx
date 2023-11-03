@@ -12,9 +12,8 @@ export function AdCard({
   id,
   title,
   price,
-  imgUrl
+  imgUrl,
 }: AdCardProps): React.ReactNode {
-
   //BASKET
   const [numberOfArticles, setNumberOfArticles] = useState(1);
   const numberOfArticlesArr: number[] = Array.from(
@@ -36,7 +35,9 @@ export function AdCard({
         className={adCardStyles["ad-card-link"]}
         href={`${basePath}/ads/${id}`}
       >
-        <img className={adCardStyles["ad-card-image"]} src={imgUrl} />
+        <div className={adCardStyles["img-container"]}>
+          <img className={adCardStyles["ad-card-image"]} src={imgUrl} />
+        </div>
         <div className={adCardStyles["ad-card-text"]}>
           <div className={adCardStyles["ad-card-title"]}>{title}</div>
           <div className={adCardStyles["ad-card-price"]}>{price} €</div>

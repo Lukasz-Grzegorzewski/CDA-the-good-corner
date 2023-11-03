@@ -10,6 +10,7 @@ export const queryAds = gql`
       price
       imgUrl
       location
+      createdAt
       category {
         id
         name
@@ -23,8 +24,8 @@ export const queryAds = gql`
 `;
 
 export const queryAd_Id = gql`
-  query Ad_Id($adIdId: ObjectId!) {
-    ad_Id(id: $adIdId) {
+  query Ad_Id($id: ID!) {
+    item: ad_Id(id: $id) {
       id
       title
       description
@@ -32,6 +33,7 @@ export const queryAd_Id = gql`
       price
       imgUrl
       location
+      createdAt
       category {
         id
         name
