@@ -2,6 +2,7 @@ import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Ad, AdCreateInput, AdUpdateInput } from "../entities/Ad";
 import { validate } from "class-validator";
 import { merge } from "../_helpers/helpers";
+import { Like } from "typeorm";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -22,6 +23,16 @@ export class AdsResolver {
     
     return ad;
   }
+
+    // ADS
+    @Query(() => [Ad])
+    async ads_Filter_ByProductName(@Arg("query") query: String): Promise<Ad[]> {
+      const ads = await Ad.find({ 
+        where: { title: Like(`%${query}%`), },
+        relations: { category: true, tags: true } 
+      });
+      return ads;
+    }
 
   // CREATE AD
   @Mutation(() => Ad)

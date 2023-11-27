@@ -4,13 +4,32 @@ import { AdCard } from "./AdCard";
 import { AdType } from "@/types";
 import { useSearchParams } from "next/navigation";
 import Dialog from "./Dialog";
-import { queryAds } from "@/graphgql/ad/queryAds";
+import { ads_Filter_ByProductName, queryAds } from "@/graphgql/ad/queryAds";
 import { useQuery } from "@apollo/client";
 import ButtonsPagination from "./buttons/ButtonsPagination";
 
 export function RecentAds(): React.ReactNode {
-  const {data, error, loading} = useQuery<{items: AdType[]}>(queryAds);
-  const ads = data ? data.items : [];
+  const query = "car";
+  const {
+    data: dataAds,
+    error: errorAds,
+    loading: loadingAds,
+  } = useQuery<{ items: AdType[] }>(queryAds);
+  const {
+    data: adsDataFilterByName,
+    error: adsErrorByName,
+    loading: adsLoadingByName,
+  } = useQuery<{ items: AdType[] }>(ads_Filter_ByProductName, {
+    variables: { query },
+  });
+
+  const ads = query
+    ? adsDataFilterByName
+      ? adsDataFilterByName.items
+      : []
+    : dataAds
+    ? dataAds.items
+    : [];
 
   //DIALOG state & ref
   const refDialog = useRef<HTMLDialogElement>(null);
@@ -23,9 +42,13 @@ export function RecentAds(): React.ReactNode {
   const pageQuery = searchQueries.get("page") || "1";
   const limitQuery = searchQueries.get("limit") || "10";
 
-  return (
+  return errorAds ? (
+    <div>Error has occured </div>
+  ) : (
     <main className="main-content">
-      <h1 className={recentAdsStyles["title"]}>{loading ? "Loading..." : "Annonces récentes"}</h1>
+      <h1 className={recentAdsStyles["title"]}>
+        {loadingAds ? "Loading..." : "Annonces récentes"}
+      </h1>
       <div className={recentAdsStyles["bar-filter"]}>
         <ButtonsPagination
           count={ads.length}
@@ -38,6 +61,7 @@ export function RecentAds(): React.ReactNode {
         >
           Filtres
         </button>
+        <input type="text" name="" id=""></input>
         <Dialog refDialog={refDialog} />
       </div>
       <section className={recentAdsStyles["recent-ads"]}>
