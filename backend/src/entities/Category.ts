@@ -37,6 +37,9 @@ export class Category extends BaseEntity {
 export class CategoryCreateInput {
   @Field()
   name!: string;
+
+  @Field()
+  createdAt?: Date;
 }
 
 // Update input fields

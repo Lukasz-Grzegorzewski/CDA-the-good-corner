@@ -35,7 +35,7 @@ export class CategoriesResolver {
 
     //add createdAt property
     const date = new Date();
-    Object.assign(newCategory, data, { createAd: date });
+    Object.assign(newCategory, data);
 
     const errors = await validate(newCategory);
     if (errors.length === 0) {

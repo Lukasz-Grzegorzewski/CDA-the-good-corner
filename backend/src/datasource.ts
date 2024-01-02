@@ -1,8 +1,12 @@
 import { DataSource } from "typeorm";
 
 export const dataSource = new DataSource({
-  type: "sqlite",
-  database:  __dirname + "/../tgc.sqlite",
+  type: "postgres",
+  host: "db",
+  port: 5432,
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
   entities: [`${__dirname}/entities/*.ts`],
   synchronize: true,
   logging: true

@@ -1,0 +1,43 @@
+.ad-details-title{
+  text-align: center;
+}
+
+.ad-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-inline: auto;
+  gap: 24px;
+  max-width: 95%;
+  padding: 50px;
+}
+
+.ad-details-image {
+  width: auto;
+  height: auto;
+}
+ 
+.ad-details-info {
+  position: relative;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+ 
+.ad-details-price {
+  font-weight: bold;
+}
+ 
+.ad-details-email {
+  margin-bottom: 60px;
+}
+ 
+@media screen and (min-width: 850px) { 
+  .ad-details {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+ 

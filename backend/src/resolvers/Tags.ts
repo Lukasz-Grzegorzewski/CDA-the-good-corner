@@ -31,11 +31,12 @@ export class TagsResolver {
 
     //add createdAt property
     const date = new Date();
-    Object.assign(newTag, data, { createAd: date });
+    Object.assign(newTag, data);
 
     const errors = await validate(newTag);
     if (errors.length === 0) {
       await newTag.save();
+      
       return newTag;
     } else {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);

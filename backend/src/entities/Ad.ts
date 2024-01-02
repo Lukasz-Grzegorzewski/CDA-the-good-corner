@@ -66,6 +66,22 @@ export class Ad extends BaseEntity {
   createdAt!: Date;
 }
 
+// FILTERS
+@InputType()
+export class AdsWhere {
+  @Field(() => [ID], { nullable: true })
+  categoryId?: number[];
+
+  @Field(() => String, { nullable: true })
+  searchTitle?: string;
+
+  // @Field(() => Int, { nullable: true })
+  // priceGte?: number;
+
+  // @Field(() => Int, { nullable: true })
+  // priceLte?: number;
+}
+
 // Create input fields
 @InputType()
 export class AdCreateInput {
@@ -82,7 +98,7 @@ export class AdCreateInput {
   description?: string;
 
   @Field({ nullable: true })
-  imgUrl?: string;
+  imgurl?: string;
 
   @Field({ nullable: true })
   location?: string;
@@ -92,6 +108,9 @@ export class AdCreateInput {
 
   @Field(() => [ObjectId], { nullable: true })
   tags?: ObjectId[];
+
+  @Field()
+  createdAt?: Date;
 }
 
 // Update input fields
@@ -110,7 +129,7 @@ export class AdUpdateInput {
   description?: string;
 
   @Field({ nullable: true })
-  imgUrl?: string;
+  imgurl?: string;
 
   @Field({ nullable: true })
   location?: string;

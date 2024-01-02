@@ -1,16 +1,58 @@
 import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
-import { Ad, AdCreateInput, AdUpdateInput } from "../entities/Ad";
+import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { merge } from "../_helpers/helpers";
-import { Like } from "typeorm";
+import { ILike, In } from "typeorm";
+
+function createWhereObject(whereIn?: AdsWhere): {
+  [key: string]: unknown;
+} {
+  const where: any = {};
+
+  if (whereIn?.categoryId) {
+    where.category = { id: In(whereIn.categoryId) };
+  }
+
+  if (whereIn?.searchTitle) {
+    where.title = ILike(`%${whereIn.searchTitle}%`);
+  }
+
+  return where;
+}
 
 @Resolver(Ad)
 export class AdsResolver {
-  // ADS
+  // ADS ALL (options: page, limit, query)
   @Query(() => [Ad])
-  async ads(): Promise<Ad[]> {
-    const ads = await Ad.find({ relations: { category: true, tags: true } });
+  async ads(
+    @Arg("page") page: string,
+    @Arg("limit")
+    limit: string,
+    @Arg("where") where: AdsWhere
+  ): Promise<Ad[]> {
+
+    const take = limit ? parseInt(limit) : 20;
+    const skip = page ? (parseInt(page) - 1) * take : 0;
+    const queryWhere = createWhereObject(where);    
+
+    const ads = await Ad.find({
+      where: queryWhere,
+      relations: { category: true, tags: true },
+      skip,
+      take,
+    });
     return ads;
+  }
+
+  @Query(() => Int)
+  async allAdsCount(
+    @Arg("where", { nullable: true }) where?: AdsWhere
+  ): Promise<number> {
+    const queryWhere = createWhereObject(where);
+    const count = await Ad.count({
+      where: queryWhere,
+    });
+    return count;
   }
 
   // AD BY ID
@@ -19,29 +61,29 @@ export class AdsResolver {
     const ad = await Ad.findOne({
       where: { id },
       relations: { category: true, tags: true },
-    });   
-    
+    });
+
     return ad;
   }
 
-    // ADS
-    @Query(() => [Ad])
-    async ads_Filter_ByProductName(@Arg("query") query: String): Promise<Ad[]> {
-      const ads = await Ad.find({ 
-        where: { title: Like(`%${query}%`), },
-        relations: { category: true, tags: true } 
-      });
-      return ads;
-    }
+  // ADS BY CATEGORY ID
+  @Query(() => [Ad])
+  async ads_By_Category_Id(@Arg("id", () => ID) id: number): Promise<Ad[]> {
+    const ads = await Ad.find({
+      where: { category: { id } },
+      relations: { category: true, tags: true },
+    });
+    return ads;
+  }
 
   // CREATE AD
   @Mutation(() => Ad)
   async createAd(@Arg("data") data: AdCreateInput): Promise<Ad | null> {
     const newAd = new Ad();
-    
+
     //add createdAt property
     const date = new Date();
-    Object.assign(newAd, data, { createAd: date });
+    Object.assign(newAd, data);
 
     const errors = await validate(newAd);
     if (errors.length === 0) {
@@ -78,7 +120,6 @@ export class AdsResolver {
     @Arg("id", () => ID) id: number,
     @Arg("data") data: AdUpdateInput
   ): Promise<Ad | null> {
-    
     const ad = await Ad.findOne({
       where: { id },
       relations: { tags: true },

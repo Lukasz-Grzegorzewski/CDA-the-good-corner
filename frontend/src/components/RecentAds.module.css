@@ -1,0 +1,92 @@
+.ads-filter-container {
+  display: grid;
+  height: 100%;
+  grid-template-areas:
+    "header-title header-title"
+    "filters recent-ads"
+    "filters pagination";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.header-title {
+  grid-area: header-title;
+
+  text-align: center;
+  margin-block: 5px;
+}
+
+.filters {
+  grid-area: filters;
+  position: relative;
+  width: 18px;
+  padding-right: 17px;
+  margin-top: -50px;
+  overflow-y: hidden;
+
+  transition: all 300ms ease-in-out;
+}
+.filters.show {
+  width: 180px;
+}
+
+
+.filters-btn {
+  all: unset;
+  position: absolute;
+  right: 4px;
+  top: 43%;
+
+  cursor: pointer;
+  animation: filter-anim 500ms ease-in-out alternate infinite;
+}
+
+.recent-ads {
+  margin: 0 20px 30px 10px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  height: 100%;
+  overflow-y: auto;
+  word-break: none;
+}
+
+.card {
+  position: relative;
+}
+
+.pagination {
+  grid-area: pagination;
+
+  margin: 0 20px 0px 0px;
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+  border-top: 1px solid lightgray;
+}
+
+.pagination::-webkit-scrollbar {
+  height: 8px;
+}
+
+.filtres-btn {
+  all: unset;
+
+  position: fixed;
+  left: 0;
+  top: 50%;
+
+  cursor: pointer;
+  animation: filter-anim 500ms ease-in-out alternate infinite;
+}
+
+@keyframes filter-anim {
+  0% {
+    transform: translateX(3%);
+  }
+  100% {
+    transform: translateX(-7%);
+  }
+}

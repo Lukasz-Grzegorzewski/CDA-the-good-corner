@@ -9,7 +9,6 @@ import {
 import { Length } from "class-validator";
 import { Ad } from "./Ad";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { ObjectId } from "./ObjectId";
 
 @Entity()
 @ObjectType()
@@ -37,6 +36,9 @@ export class Tag extends BaseEntity {
 export class TagCreateInput {
   @Field()
   name!: string;
+
+  @Field()
+  createdAt?: Date;
 }
 
 // Update input fields
