@@ -23,14 +23,11 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
   const searchTitle = searchQueries.get("searchTitle") || "";
   const categoriesQueryArray = searchQueries.get("category");
   const categories = categoriesQueryArray ? JSON.parse(categoriesQueryArray) : [];
-console.log("categories", categories);
 
   const where = {
     ...(categories.length > 0 ? { categoryId : categories} : {}),
     ...(searchTitle ? { searchTitle } : {}),
   };
-  console.log("where", where);
-  
 
   const {
     data: dataAds,
@@ -95,7 +92,7 @@ console.log("categories", categories);
                 description={ad.description}
                 owner={ad.owner}
                 price={ad.price}
-                imgUrl={ad.imgUrl}
+                imgurl={ad.imgurl}
                 location={ad.location}
                 createdAt={ad.createdAt}
                 category={ad.category}

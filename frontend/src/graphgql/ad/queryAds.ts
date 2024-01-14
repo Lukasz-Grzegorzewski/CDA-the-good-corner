@@ -8,7 +8,7 @@ export const queryAds = gql`
       description
       owner
       price
-      imgUrl
+      imgurl
       location
       createdAt
       category {
@@ -32,7 +32,7 @@ export const queryAd_Id = gql`
       description
       owner
       price
-      imgUrl
+      imgurl
       location
       createdAt
       category {

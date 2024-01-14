@@ -9,7 +9,7 @@ export const AdsFactory = setSeederFactory(Ad, (faker: Faker) => {
   ad.description = faker.lorem.sentence({ min: 3, max: 5 });
   ad.owner = faker.internet.email();
   ad.price = faker.number.int({ min: 0, max: 1000 });
-  ad.imgUrl = faker.image.urlLoremFlickr({width:200, height: 150, category: 'cats'})
+  ad.imgurl = faker.image.urlLoremFlickr({width:200, height: 150, category: 'cats'})
   ad.location = faker.location.city();
   return ad;
 });

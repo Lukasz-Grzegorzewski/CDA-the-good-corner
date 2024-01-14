@@ -19,7 +19,7 @@ function AdsAdmin({ads}: AdsAdminProps)  {
             description={item.description}
             owner={item.owner}
             price={item.price}
-            imgUrl={item.imgUrl}
+            imgurl={item.imgurl}
             location={item.location}
             category={item.category}
             createdAt={item.createdAt}

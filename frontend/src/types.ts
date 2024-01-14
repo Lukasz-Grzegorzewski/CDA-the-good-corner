@@ -1,4 +1,10 @@
-import { off } from "process";
+export type UserType = {
+  id: number;
+  email: string;
+  role: string;
+  ads?: AdType[];
+  createdAt: string;
+};
 
 export type AdType = {
   id: number;
@@ -6,11 +12,12 @@ export type AdType = {
   title: string;
   price: number;
   description?: string;
-  imgUrl?: string;
+  imgurl?: string;
   location?: string;
   createdAt: string;
   category?: CategoryType;
   tags?: TagType[];
+  createdBy?: UserType;
 };
 
 export type MutationAdType = {

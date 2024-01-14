@@ -47,7 +47,7 @@ export default function Ad() {
               <div className={adStyles["ad-details-image-container"]}>
                 <Image
                   className={adStyles["ad-details-image"]}
-                  src={ad.imgUrl ? ad.imgUrl?.replace("200/150", "400/300") : ""}
+                  src={ad.imgurl ? ad.imgurl?.replace("200/150", "400/300") : ""}
                   width={600}
                   height={600}
                   priority

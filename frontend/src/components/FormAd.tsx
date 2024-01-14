@@ -30,7 +30,6 @@ export default function FormAd({ type, title }: FormAdProps) {
     category: undefined,
     tags: [],
   });
-  console.log(data);
 
   const { data: dataAd } = useQuery<{ item: AdType }>(queryAd_Id, {
     variables: { id: adId },
@@ -45,7 +44,7 @@ export default function FormAd({ type, title }: FormAdProps) {
         description: ad.description,
         owner: ad.owner,
         price: ad.price,
-        imgurl: ad.imgUrl,
+        imgurl: ad.imgurl,
         location: ad.location,
         category: ad.category ? { id: ad.category.id } : undefined,
         tags: ad.tags?.map((tag) => ({ id: tag.id })) || [],
@@ -101,13 +100,13 @@ export default function FormAd({ type, title }: FormAdProps) {
         .then((res) => {
           router.push(`/ads/${res.data.item.id}`);
         })
-        .catch((err) => console.log(`err : `, err));
+        .catch((err) => console.error(`err : `, err));
     } else if (type === "new") {
       createAd({ variables: { data } })
         .then((res) => {
           router.replace(`/ads/${res.data.item.id}`);
         })
-        .catch((err) => console.log(`err : `, err));
+        .catch((err) => console.error(`err : `, err));
     }
   }
 
@@ -178,16 +177,16 @@ export default function FormAd({ type, title }: FormAdProps) {
           </label>
 
           {/*IMAGE URL*/}
-          <label htmlFor="imgUrl">
+          <label htmlFor="imgurl">
             <p>Image URL</p>
             <input
               className={`${!data?.imgurl && formAdStyles.gray}`}
               type="text"
-              name="imgUrl"
-              id="imgUrl"
+              name="imgurl"
+              id="imgurl"
               value={data.imgurl || ""}
               onChange={(e) => setData({ ...data, imgurl: e.target.value })}
-              placeholder={ad ? ad.imgUrl : "https://"}
+              placeholder={ad ? ad.imgurl : "https://"}
             />
           </label>
 
@@ -282,7 +281,7 @@ export default function FormAd({ type, title }: FormAdProps) {
         {ad && (
           <Image
             className={formAdStyles.img}
-            src={ad.imgUrl ? ad.imgUrl?.replace("200/150", "400/300") : ""}
+            src={ad.imgurl ? ad.imgurl?.replace("200/150", "400/300") : ""}
             width={600}
             height={600}
             priority
