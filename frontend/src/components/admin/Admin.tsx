@@ -16,7 +16,7 @@ import { queryAds } from "../../graphgql/ad/queryAds";
 //     description: "2024",
 //     owner: "Ado",
 //     price: 11000,
-//     imgUrl:
+//     imgurl:
 //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
 //     location: "Lyon",
 //     createdAt: "2023-11-03 12:32:10",
@@ -37,7 +37,7 @@ import { queryAds } from "../../graphgql/ad/queryAds";
 //     description: "2024",
 //     owner: "Ado",
 //     price: 4000,
-//     imgUrl:
+//     imgurl:
 //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYXA2vHXJb-i052xlABBOhmIjd2dTYxHOEg&usqp=CAU",
 //     location: "Lyon",
 //     createdAt: "2023-11-03 12:32:10",

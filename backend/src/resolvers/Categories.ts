@@ -1,4 +1,4 @@
-import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, ID, Int, Mutation, Query, Resolver } from "type-graphql";
 import {
   Category,
   CategoryCreateInput,
@@ -27,6 +27,7 @@ export class CategoriesResolver {
   }
 
   // CREATE CATEGORY
+  @Authorized("SUPERADMIN", "ADMIN")
   @Mutation(() => Category)
   async createCategory(
     @Arg("data") data: CategoryCreateInput
@@ -47,6 +48,7 @@ export class CategoriesResolver {
   }
 
   // DELETE CATEGORY
+  @Authorized("SUPERADMIN", "ADMIN")
   @Mutation(() => Category, { nullable: true })
   async deleteCategory(
     @Arg("id", () => ID) id: number
@@ -65,6 +67,7 @@ export class CategoriesResolver {
   }
 
   // UPDATE CATEGORY
+  @Authorized("SUPERADMIN", "ADMIN")
   @Mutation(() => Category)
   async updateCategory(
     @Arg("id", () => ID) id: number,

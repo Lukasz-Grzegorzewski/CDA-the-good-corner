@@ -1,8 +1,18 @@
-import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  ID,
+  Int,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { merge } from "../_helpers/helpers";
 import { ILike, In } from "typeorm";
+import { UserContext } from "../types";
 
 function createWhereObject(whereIn?: AdsWhere): {
   [key: string]: unknown;
@@ -20,24 +30,29 @@ function createWhereObject(whereIn?: AdsWhere): {
   return where;
 }
 
+// USEFULL FOR MIDDLEWARES
+// import { test } from "../middlewares/test";
+// @UseMiddleware(test)
+
 @Resolver(Ad)
 export class AdsResolver {
-  // ADS ALL (options: page, limit, query)
+  // ADS ALL (options: page, limit, where{categoryId: {id: "1"}, searchTitle: "test"})
+  // @Authorized()
   @Query(() => [Ad])
   async ads(
+    @Ctx() context: UserContext,
     @Arg("page") page: string,
     @Arg("limit")
     limit: string,
     @Arg("where") where: AdsWhere
   ): Promise<Ad[]> {
-
     const take = limit ? parseInt(limit) : 20;
     const skip = page ? (parseInt(page) - 1) * take : 0;
-    const queryWhere = createWhereObject(where);    
+    const queryWhere = createWhereObject(where);
 
     const ads = await Ad.find({
       where: queryWhere,
-      relations: { category: true, tags: true },
+      relations: { category: true, tags: true, createdBy: true },
       skip,
       take,
     });
@@ -56,41 +71,36 @@ export class AdsResolver {
   }
 
   // AD BY ID
+
   @Query(() => Ad)
   async ad_Id(@Arg("id", () => ID) id: number): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { category: true, tags: true },
+      relations: { category: true, tags: true, createdBy: true },
     });
 
     return ad;
   }
 
-  // ADS BY CATEGORY ID
-  @Query(() => [Ad])
-  async ads_By_Category_Id(@Arg("id", () => ID) id: number): Promise<Ad[]> {
-    const ads = await Ad.find({
-      where: { category: { id } },
-      relations: { category: true, tags: true },
-    });
-    return ads;
-  }
-
   // CREATE AD
+  @Authorized("SUPERADMIN", "ADMIN", "SUBSCRIBED")
   @Mutation(() => Ad)
-  async createAd(@Arg("data") data: AdCreateInput): Promise<Ad | null> {
+  async createAd(
+    @Ctx() context: UserContext,
+    @Arg("data") data: AdCreateInput
+  ): Promise<Ad | null> {
     const newAd = new Ad();
 
-    //add createdAt property
     const date = new Date();
-    Object.assign(newAd, data);
+
+    Object.assign(newAd, data, { createdBy: context.user, createdAt: date });
 
     const errors = await validate(newAd);
     if (errors.length === 0) {
       await newAd.save();
       const adToReturn = await Ad.findOne({
         where: { id: newAd.id },
-        relations: { category: true, tags: true },
+        relations: { category: true, tags: true, createdBy: true },
       });
       return adToReturn;
     } else {
@@ -99,33 +109,50 @@ export class AdsResolver {
   }
 
   // DELETE AD
-  @Mutation(() => Ad, { nullable: true })
-  async deleteAd(@Arg("id", () => ID) id: number): Promise<Ad | null> {
+  @Authorized("SUPERADMIN", "ADMIN", "SUBSCRIBED")
+  @Mutation(() => Ad)
+  async deleteAd(
+    @Ctx() context: UserContext,
+    @Arg("id", () => ID) id: number
+  ): Promise<Ad> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { category: true, tags: true },
+      relations: { category: true, tags: true, createdBy: true },
     });
 
-    if (ad) {
+    if (
+      ad &&
+      (ad.createdBy.id === context.user?.id ||
+        context.user?.role === "SUPERADMIN" ||
+        context.user?.role === "ADMIN")
+    ) {
       await ad.remove();
       ad.id = id;
+      return ad;
+    } else {
+      throw new Error(`Ad not found or you are not authorized to delete it`);
     }
-
-    return ad;
   }
 
   // UPDATE AD
+  @Authorized("SUPERADMIN", "ADMIN", "SUBSCRIBED")
   @Mutation(() => Ad)
   async updateAd(
+    @Ctx() context: any,
     @Arg("id", () => ID) id: number,
     @Arg("data") data: AdUpdateInput
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { tags: true },
+      relations: { category: true, tags: true, createdBy: true },
     });
 
-    if (ad) {
+    if (
+      ad &&
+      (ad.createdBy.id === context.user.id ||
+        context.user.role === "SUPERADMIN" ||
+        context.user.role === "ADMIN")
+    ) {
       merge(ad, data);
       Object.assign(ad, data);
 
@@ -137,12 +164,14 @@ export class AdsResolver {
           relations: {
             category: true,
             tags: true,
+            createdBy: true,
           },
         });
       } else {
         throw new Error(`Error occured: ${JSON.stringify(errors)}`);
       }
+    } else {
+      throw new Error(`Ad not found or you are not authorized to update it`);
     }
-    return ad;
   }
 }

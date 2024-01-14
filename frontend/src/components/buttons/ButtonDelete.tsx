@@ -1,15 +1,13 @@
 import React from "react";
-import { useDeleteCustom } from "../../graphgql/deleteData";
 
 type ButtonDeleteProps = {
   id: number;
 };
 
+// TODO
 function ButtonDelete({ id }: ButtonDeleteProps) {
   const handleClick = () => {
-    const result = useDeleteCustom(id).then((res) => {
-      console.log(`res : `, res);
-    });
+    console.info(`ButtonDelete`);
   };
   return (
     <button

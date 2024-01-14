@@ -11,6 +11,8 @@ import {
 import { Length, ValidateIf, IsInt } from "class-validator";
 import { Category } from "./Category";
 import { Tag } from "./Tag";
+import { User } from "./User";
+
 import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
 import { ObjectId } from "./ObjectId";
 
@@ -44,11 +46,15 @@ export class Ad extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  imgUrl!: string;
+  imgurl!: string;
 
   @Column({ nullable: true, length: 100 })
   @Field({ nullable: true })
   location!: string;
+  
+  @CreateDateColumn()
+  @Field()
+  createdAt!: Date;
 
   @ManyToOne(() => Category, (category) => category.ads, {
     onDelete: "CASCADE",
@@ -61,9 +67,9 @@ export class Ad extends BaseEntity {
   @Field(() => [Tag], { nullable: true })
   tags!: Tag[];
 
-  @CreateDateColumn()
-  @Field()
-  createdAt!: Date;
+  @ManyToOne(() => User, user => user.ads)
+  @Field(() => User)
+  createdBy!: User;
 }
 
 // FILTERS
@@ -108,9 +114,6 @@ export class AdCreateInput {
 
   @Field(() => [ObjectId], { nullable: true })
   tags?: ObjectId[];
-
-  @Field()
-  createdAt?: Date;
 }
 
 // Update input fields

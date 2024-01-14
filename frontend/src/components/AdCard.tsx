@@ -13,7 +13,7 @@ export function AdCard({
   id,
   title,
   price,
-  imgUrl,
+  imgurl,
 }: AdCardProps): React.ReactNode {
   //BASKET
   const [numberOfArticles, setNumberOfArticles] = useState(1);
@@ -39,7 +39,7 @@ export function AdCard({
         <div className={adCardStyles["img-container"]}>
           <Image
             className={adCardStyles["ad-card-image"]}
-            src={imgUrl ? imgUrl : ""}
+            src={imgurl ? imgurl : ""}
             width={640}
             height={480}
             priority

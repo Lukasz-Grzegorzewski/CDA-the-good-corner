@@ -16,7 +16,7 @@ export const mutationUpdateAd = gql`
       description
       owner
       price
-      imgUrl
+      imgurl
       location
       category {
         id
