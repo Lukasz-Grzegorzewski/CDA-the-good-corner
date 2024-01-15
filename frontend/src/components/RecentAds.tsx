@@ -1,5 +1,5 @@
 import recentAdsStyles from "./RecentAds.module.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AdCard } from "./AdCard";
 import { AdType } from "../types";
 import { useSearchParams } from "next/navigation";
@@ -7,6 +7,7 @@ import { queryAds } from "../graphgql/ad/queryAds";
 import { useQuery } from "@apollo/client";
 import ButtonsPagination from "./buttons/ButtonsPagination";
 import Filters from "./Filters";
+import { useRouter } from "next/router";
 
 type RecentAdsProps = {
   categoryId?: number;
@@ -15,17 +16,30 @@ type RecentAdsProps = {
 export function RecentAds(props: RecentAdsProps): React.ReactNode {
   //states
   const [isFilters, setIsFilters] = useState(false);
+  const router = useRouter();
+  const searchQueries = useSearchParams();
+  // console.log("searchQueries", searchQueries.has("page"));
+
+  useEffect(() => {
+    console.log("router.asPath", router.asPath);
+    if (router.asPath === "/") {
+      router.replace(`${router.asPath}?page=1&limit=20&categories=[]`);
+    }
+  }, []);
 
   // Queries for pagination
-  const searchQueries = useSearchParams();
   const page = searchQueries.get("page") || "1";
   const limit = searchQueries.get("limit") || "20";
   const searchTitle = searchQueries.get("searchTitle") || "";
-  const categoriesQueryArray = searchQueries.get("category");
-  const categories = categoriesQueryArray ? JSON.parse(categoriesQueryArray) : [];
+  const categoriesQueryArray = searchQueries.get("categories") || "[]";
+
+  const categories = categoriesQueryArray
+    ? JSON.parse(categoriesQueryArray)
+    : [];
+  // console.log("categories", categories);
 
   const where = {
-    ...(categories.length > 0 ? { categoryId : categories} : {}),
+    ...(categories.length > 0 ? { categoryId: categories } : {}),
     ...(searchTitle ? { searchTitle } : {}),
   };
 
@@ -58,7 +72,7 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
               : `${recentAdsStyles["filters"]} ${recentAdsStyles["show"]}`
           }
         >
-          <Filters categoriesArray={categories} isFilters={isFilters}/>
+          <Filters categoriesArray={categories} isFilters={isFilters} />
           <button
             className={recentAdsStyles["filters-btn"]}
             onClick={() => setIsFilters(!isFilters)}

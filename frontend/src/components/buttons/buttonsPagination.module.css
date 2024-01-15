@@ -11,6 +11,9 @@
   padding: 5px;
   cursor: pointer;
 }
+.arrow:hover {
+  background-color: #ffa41b9b;
+}
 
 .arrow.hide {
   display: none;
@@ -21,9 +24,13 @@
   border-radius: 5px;
   min-width: 18px;
   text-align: center;
+  cursor: pointer;
+}
+.link-page:not(.link-page-active):hover {
+  background-color: #ffa41b9b;
 }
 
-a.link-page-active {
+.link-page-active {
   color: white;
   background-color: #ffa41b;
 }
